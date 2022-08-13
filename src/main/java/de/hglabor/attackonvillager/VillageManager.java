@@ -4,16 +4,12 @@ import com.mojang.datafixers.util.Pair;
 import de.hglabor.attackonvillager.raid.Raid;
 import de.hglabor.attackonvillager.raid.RaidManager;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Items;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
@@ -23,7 +19,6 @@ import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.RegistryEntry;
 import net.minecraft.util.registry.RegistryEntryList;
 import net.minecraft.world.World;
-import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.gen.structure.Structure;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,7 +32,7 @@ import java.util.Set;
 
 import static de.hglabor.attackonvillager.AttackOnVillagerClient.MOD_ID;
 
-public final class VillageManager implements PlayerBlockBreakEvents.After, ServerTickEvents.StartWorldTick {
+public final class VillageManager implements ServerTickEvents.StartWorldTick {
     private VillageManager() {
     }
 
@@ -72,21 +67,6 @@ public final class VillageManager implements PlayerBlockBreakEvents.After, Serve
         );
 
         return pair != null ? Pair.of(world.getChunk(pair.getFirst()).getPos(), pair.getFirst()) : null;
-    }
-
-    @Override
-    public void afterBlockBreak(World world, PlayerEntity player, BlockPos pos, BlockState state, BlockEntity blockEntity) {
-        Pair<ChunkPos, BlockPos> nearestVillage = getNearestVillage((ServerWorld) world, player, 100);
-        if (nearestVillage == null) {
-            LOGGER.info("No Village");
-        } else {
-            Set<BlockPos> villageBlocks = VILLAGE_BLOCKS.getOrDefault(nearestVillage.getFirst(), new HashSet<>());
-            if (villageBlocks.contains(pos)) {
-                player.sendMessage(Text.of("Yes"));
-            } else {
-                player.sendMessage(Text.of("No"));
-            }
-        }
     }
 
     @Override

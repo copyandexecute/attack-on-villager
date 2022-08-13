@@ -4,6 +4,7 @@ import de.hglabor.attackonvillager.raid.AbstractWave;
 import de.hglabor.attackonvillager.raid.Raid;
 import de.hglabor.attackonvillager.raid.WaveType;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.passive.VillagerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.Box;
@@ -27,13 +28,14 @@ public class KillVillagersWave extends AbstractWave {
                 villagers.add(villager.getUuid());
             }
         }
-        raid.getBossBar().setName(Text.of("Raid - Villagers übrig: " + villagers.size()));
-        raid.getBossBar().setPercent(1f - (float) getDeadVillagerCount() / villagers.size());
     }
 
     @Override
     public void tick() {
-
+        super.tick();
+        if (checkIfAllVillagersAreDead()) {
+            startNextWave();
+        }
     }
 
     private int getDeadVillagerCount() {
@@ -62,5 +64,11 @@ public class KillVillagersWave extends AbstractWave {
     @Override
     public WaveType getWaveType() {
         return WaveType.KILL_VILLAGERS;
+    }
+
+    @Override
+    public void updateBossBar() {
+        raid.getBossBar().setName(Text.of("Raid - Villagers übrig: " + (villagers.size() - getDeadVillagerCount())));
+        raid.getBossBar().setPercent(1f - (float) getDeadVillagerCount() / villagers.size());
     }
 }

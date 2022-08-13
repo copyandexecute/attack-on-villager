@@ -19,7 +19,6 @@ public final class AttackOnVillagerClient implements ClientModInitializer {
     public void onInitializeClient() {
         VillageManager.INSTANCE.init();
         RaidManager.INSTANCE.init();
-        PlayerBlockBreakEvents.AFTER.register(VillageManager.INSTANCE);
         ServerTickEvents.START_WORLD_TICK.register(VillageManager.INSTANCE);
     }
 }

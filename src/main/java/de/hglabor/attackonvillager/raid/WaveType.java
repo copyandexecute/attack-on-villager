@@ -1,7 +1,10 @@
 package de.hglabor.attackonvillager.raid;
 
 public enum WaveType {
-    KILL_VILLAGERS, DESTROY_HOUSES;
+    KILL_VILLAGERS,
+    DESTROY_HOUSES,
+    ROB_VILLAGERS,
+    WIN;
 
     private static final WaveType[] VALUES = values();
 

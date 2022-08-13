@@ -1,11 +1,13 @@
 package de.hglabor.attackonvillager.raid;
 
 import de.hglabor.attackonvillager.raid.wave.KillVillagersWave;
+import de.hglabor.attackonvillager.raid.wave.RobVillagersWave;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LightningEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.boss.BossBar;
 import net.minecraft.entity.boss.ServerBossBar;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
@@ -29,8 +31,8 @@ public class Raid {
     private final Set<BlockPos> blocks;
     private final ServerWorld world;
     private final ServerBossBar bossBar = new ServerBossBar(Text.empty(), BossBar.Color.RED, BossBar.Style.PROGRESS);
-    private WaveType currentWaveType = WaveType.KILL_VILLAGERS;
-    private AbstractWave currentWave = new KillVillagersWave(this);
+    private AbstractWave currentWave = new RobVillagersWave(this);
+    private boolean isActive;
 
     public Raid(ServerWorld world, UUID leader, ChunkPos chunkPos, BlockPos center, Set<BlockPos> blocks) {
         this.leader = leader;
@@ -41,13 +43,22 @@ public class Raid {
     }
 
     public void start() {
+        isActive = true;
         strikeLightning(center, true);
         currentWave.start();
     }
 
     public void tick() {
-        currentWave.tick();
-        trackBossBar();
+        if (isActive) {
+            currentWave.tick();
+            trackBossBar();
+        }
+    }
+
+    public void end() {
+        isActive = false;
+        bossBar.clearPlayers();
+        //RaidManager.INSTANCE.removeRaid(chunkPos);
     }
 
     public void strikeLightning(BlockPos pos, Boolean cosmetic) {
@@ -59,30 +70,24 @@ public class Raid {
 
     public void trackBossBar() {
         for (ServerPlayerEntity player : world.getPlayers()) {
-            if (player.getPos().distanceTo(Vec3d.of(center)) <= SEARCH_RADIUS) {
+            if (player.getPos().distanceTo(Vec3d.of(center)) <= 100) {
                 bossBar.addPlayer(player);
             } else {
                 bossBar.removePlayer(player);
             }
         }
+    }
 
-        switch (currentWaveType) {
-            case KILL_VILLAGERS -> {
-                bossBar.setName(Text.of("Raid - Villagers übrig: " + villagers.size()));
-                bossBar.setPercent(1f - (float) getDeadVillagerCount() / villagers.size());
-            }
-            case DESTROY_HOUSES -> {
-            }
-        }
+    public void onInteractEntity(PlayerEntity player, LivingEntity entity) {
+        currentWave.onInteractEntity(player, entity);
     }
 
     public void onEntityDeath(LivingEntity entity) {
-        if (villagers.contains(entity.getUuid())) {
-            if (currentWaveType == WaveType.KILL_VILLAGERS && checkIfAllVillagersAreDead()) {
-                currentWaveType = currentWaveType.next();
-            }
-            trackBossBar();
-        }
+        currentWave.onEntityDeath(entity);
+    }
+
+    public void onBlockBreak(BlockPos pos) {
+        currentWave.onBlockBreak(pos);
     }
 
     public AbstractWave getCurrentWave() {
@@ -111,10 +116,6 @@ public class Raid {
 
     public ServerWorld getWorld() {
         return world;
-    }
-
-    public WaveType getCurrentWaveType() {
-        return currentWaveType;
     }
 
     public ServerBossBar getBossBar() {
