@@ -6,6 +6,7 @@ import de.hglabor.attackonvillager.raid.WaveType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.passive.VillagerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
@@ -54,6 +55,17 @@ public class KillVillagersWave extends AbstractWave {
             if (entity.isAlive()) return false;
         }
         return true;
+    }
+
+    @Override
+    public void onEntityDeath(LivingEntity entity) {
+        if (villagers.contains(entity.getUuid())) {
+            if (entity instanceof VillagerEntity villager) {
+                for (int i = 0; i < random.nextInt(villager.getInventory().size()); i++) {
+                    entity.dropStack(villager.getInventory().getStack(random.nextInt(villager.getInventory().size())));
+                }
+            }
+        }
     }
 
     @Override

@@ -2,21 +2,29 @@ package de.hglabor.attackonvillager.raid;
 
 import de.hglabor.attackonvillager.raid.wave.KillVillagersWave;
 import de.hglabor.attackonvillager.raid.wave.RobVillagersWave;
+import de.hglabor.attackonvillager.utils.VillagerUtils;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LightningEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.boss.BossBar;
 import net.minecraft.entity.boss.ServerBossBar;
+import net.minecraft.entity.passive.VillagerEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.SimpleInventory;
+import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Box;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Vec3d;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
+import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
 
@@ -31,6 +39,7 @@ public class Raid {
     private final Set<BlockPos> blocks;
     private final ServerWorld world;
     private final ServerBossBar bossBar = new ServerBossBar(Text.empty(), BossBar.Color.RED, BossBar.Style.PROGRESS);
+    private final Random random = new Random();
     private AbstractWave currentWave = new RobVillagersWave(this);
     private boolean isActive;
 
@@ -45,6 +54,7 @@ public class Raid {
     public void start() {
         isActive = true;
         strikeLightning(center, true);
+        generateVillagerLoot();
         currentWave.start();
     }
 
@@ -59,6 +69,18 @@ public class Raid {
         isActive = false;
         bossBar.clearPlayers();
         //RaidManager.INSTANCE.removeRaid(chunkPos);
+    }
+
+    private void generateVillagerLoot() {
+        for (Entity entity : getWorld().getOtherEntities(null, Box.from(Vec3d.ofCenter(getCenter())).expand(100))) {
+            if (entity instanceof VillagerEntity villager) {
+                List<ItemStack> professionItems = VillagerUtils.createItemPoolFromProfessions(entity, villager.getVillagerData().getProfession());
+                SimpleInventory villagerInventory = villager.getInventory();
+                for (int i = 0; i < random.nextInt(villagerInventory.size()); i++) {
+                    villagerInventory.setStack(random.nextInt(villagerInventory.size()), professionItems.get(random.nextInt(professionItems.size())));
+                }
+            }
+        }
     }
 
     public void strikeLightning(BlockPos pos, Boolean cosmetic) {

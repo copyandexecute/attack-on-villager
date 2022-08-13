@@ -53,15 +53,9 @@ public class RobVillagersWave extends AbstractWave {
 
     @Override
     public void start() {
-        for (Entity entity : raid.getWorld().getOtherEntities(null, Box.from(Vec3d.ofCenter(raid.getCenter())).expand(300))) {
+        for (Entity entity : raid.getWorld().getOtherEntities(null, Box.from(Vec3d.ofCenter(raid.getCenter())).expand(150))) {
             if (entity instanceof VillagerEntity villager) {
-                if (villagers.add(villager.getUuid())) {
-                    List<ItemStack> professionItems = createItemPoolFromProfessions(entity, villager.getVillagerData().getProfession());
-                    SimpleInventory villagerInventory = villager.getInventory();
-                    for (int i = 0; i < random.nextInt(villagerInventory.size()); i++) {
-                        villagerInventory.setStack(random.nextInt(villagerInventory.size()), professionItems.get(random.nextInt(professionItems.size())));
-                    }
-                }
+                villagers.add(villager.getUuid());
             }
         }
         villagersToRob = ((random.nextInt(40, 80) * villagers.size()) / 100);
@@ -77,46 +71,13 @@ public class RobVillagersWave extends AbstractWave {
         return WaveType.ROB_VILLAGERS;
     }
 
-    /**
-     * todo I dont know what this does but it does something.
-     */
-    private List<ItemStack> createItemPoolFromProfessions(Entity entity, @Nullable VillagerProfession profession) {
-        List<ItemStack> pool = new ArrayList<>();
-        if (profession == null || profession.id().equals(VillagerProfession.NONE.id()) || profession.id().equals(VillagerProfession.NITWIT.id())) {
-            profession = getRandomVillagerProfession();
-        }
-        Int2ObjectMap<TradeOffers.Factory[]> items = TradeOffers.PROFESSION_TO_LEVELED_TRADE.get(profession);
-        items.forEach((integer, factories) -> {
-            for (TradeOffers.Factory factory : factories) {
-                TradeOffer tradeOffer = factory.create(entity, Random.create());
-                if (tradeOffer != null) {
-                    pool.add(tradeOffer.getSellItem());
-                }
-            }
-        });
-        return pool;
-    }
-
-    private VillagerProfession getRandomVillagerProfession() {
-        Optional<RegistryEntry<VillagerProfession>> profession = Registry.VILLAGER_PROFESSION.getRandom(Random.create());
-        if (profession.isPresent()) {
-            if (profession.get().value().id().equals(VillagerProfession.NONE.id()) || profession.get().value().id().equals(VillagerProfession.NITWIT.id())) {
-                return getRandomVillagerProfession();
-            } else {
-                return profession.get().value();
-            }
-        } else {
-            return getRandomVillagerProfession();
-        }
-    }
-
     @Override
     public void onInteractEntity(PlayerEntity player, LivingEntity entity) {
         if (entity instanceof InventoryOwner invEntity) {
             player.openHandledScreen(new NamedScreenHandlerFactory() {
                 @Override
                 public Text getDisplayName() {
-                    return Text.of("Inventory");
+                    return Text.of("Villager Inventory");
                 }
 
                 @Override
