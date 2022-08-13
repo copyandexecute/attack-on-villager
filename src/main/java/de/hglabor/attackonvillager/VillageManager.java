@@ -1,13 +1,20 @@
 package de.hglabor.attackonvillager;
 
 import com.mojang.datafixers.util.Pair;
+import de.hglabor.attackonvillager.raid.Raid;
+import de.hglabor.attackonvillager.raid.RaidManager;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Items;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
@@ -30,7 +37,7 @@ import java.util.Set;
 
 import static de.hglabor.attackonvillager.AttackOnVillagerClient.MOD_ID;
 
-public final class VillageManager implements PlayerBlockBreakEvents.After {
+public final class VillageManager implements PlayerBlockBreakEvents.After, ServerTickEvents.StartWorldTick {
     private VillageManager() {
     }
 
@@ -41,7 +48,7 @@ public final class VillageManager implements PlayerBlockBreakEvents.After {
     public void init() {
     }
 
-    public ChunkPos getNearestVillage(ServerWorld world, Entity entity, int radius) {
+    public Pair<ChunkPos, BlockPos> getNearestVillage(ServerWorld world, Entity entity, int radius) {
         Registry<Structure> registry = world.getRegistryManager().get(Registry.STRUCTURE_KEY);
 
         List<RegistryEntry<Structure>> villages = new ArrayList<>();
@@ -64,20 +71,37 @@ public final class VillageManager implements PlayerBlockBreakEvents.After {
                 false
         );
 
-        return pair != null ? world.getChunk(pair.getFirst()).getPos() : null;
+        return pair != null ? Pair.of(world.getChunk(pair.getFirst()).getPos(), pair.getFirst()) : null;
     }
 
     @Override
     public void afterBlockBreak(World world, PlayerEntity player, BlockPos pos, BlockState state, BlockEntity blockEntity) {
-        ChunkPos nearestVillage = getNearestVillage((ServerWorld) world, player, 100);
+        Pair<ChunkPos, BlockPos> nearestVillage = getNearestVillage((ServerWorld) world, player, 100);
         if (nearestVillage == null) {
             LOGGER.info("No Village");
         } else {
-            Set<BlockPos> villageBlocks = VILLAGE_BLOCKS.getOrDefault(nearestVillage, new HashSet<>());
+            Set<BlockPos> villageBlocks = VILLAGE_BLOCKS.getOrDefault(nearestVillage.getFirst(), new HashSet<>());
             if (villageBlocks.contains(pos)) {
                 player.sendMessage(Text.of("Yes"));
             } else {
                 player.sendMessage(Text.of("No"));
+            }
+        }
+    }
+
+    @Override
+    public void onStartTick(ServerWorld world) {
+        if (world.equals(world.getServer().getOverworld())) {
+            for (ServerPlayerEntity player : world.getPlayers()) {
+                if (!player.getMainHandStack().isOf(Items.DIAMOND_SWORD)) continue;
+                Pair<ChunkPos, BlockPos> nearestVillage = getNearestVillage(world, player, 100);
+                if (nearestVillage == null) continue;
+                Raid raid = RaidManager.INSTANCE.getOrCreateRaid(
+                        nearestVillage.getFirst(),
+                        nearestVillage.getSecond(),
+                        player,
+                        VILLAGE_BLOCKS.getOrDefault(nearestVillage.getFirst(), new HashSet<>())
+                );
             }
         }
     }
