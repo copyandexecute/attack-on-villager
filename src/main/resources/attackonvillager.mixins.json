@@ -6,7 +6,8 @@
   "mixins": [
     "StructureMixin",
     "server.network.MixinServerPlayNetworkHandler",
-    "world.entity.LivingEntityMixin"
+    "world.entity.LivingEntityMixin",
+    "world.entity.MerchantEntityMixin"
   ],
   "client": [
   ],
