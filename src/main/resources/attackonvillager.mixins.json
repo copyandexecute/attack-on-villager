@@ -4,8 +4,12 @@
   "package": "de.hglabor.attackonvillager.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
+    "StructureMixin",
+    "StructurePieceMixin"
   ],
   "client": [
+  ],
+  "server": [
   ],
   "injectors": {
     "defaultRequire": 1
