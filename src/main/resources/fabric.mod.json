@@ -15,8 +15,8 @@
   "icon": "assets/attackonvillager/icon.png",
   "environment": "*",
   "entrypoints": {
-    "main": [
-      "de.hglabor.attackonvillager.AttackOnVillager"
+    "client": [
+      "de.hglabor.attackonvillager.AttackOnVillagerClient"
     ]
   },
   "mixins": [

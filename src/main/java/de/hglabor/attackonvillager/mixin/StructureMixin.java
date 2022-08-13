@@ -1,11 +1,9 @@
 package de.hglabor.attackonvillager.mixin;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
-import net.minecraft.client.MinecraftClient;
+import de.hglabor.attackonvillager.VillageManager;
 import net.minecraft.structure.StructurePiece;
-import net.minecraft.structure.StructurePieceType;
 import net.minecraft.structure.StructurePiecesList;
+import net.minecraft.structure.StructureStart;
 import net.minecraft.util.math.BlockBox;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
@@ -18,9 +16,8 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+import java.util.HashSet;
+import java.util.function.Predicate;
 
 @Mixin(Structure.class)
 public abstract class StructureMixin {
@@ -35,17 +32,12 @@ public abstract class StructureMixin {
     @Overwrite
     public void postPlace(StructureWorldAccess world, StructureAccessor structureAccessor, ChunkGenerator chunkGenerator, net.minecraft.util.math.random.Random random, BlockBox box, ChunkPos chunkPos, StructurePiecesList pieces) {
         if (this.getType() == StructureType.JIGSAW) {
-            ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(1);
+            StructureStart structureStart = structureAccessor.getStructureStarts(chunkPos, Predicate.isEqual((Object) this)).get(0);
             for (StructurePiece piece : pieces.pieces()) {
-                if (piece.getType() == StructurePieceType.JIGSAW) {
-                    for (int x = piece.getBoundingBox().getMinX(); x <= piece.getBoundingBox().getMaxX(); ++x) {
-                        for (int y = piece.getBoundingBox().getMinY(); y <= piece.getBoundingBox().getMaxY(); ++y) {
-                            for (int z = piece.getBoundingBox().getMinZ(); z <= piece.getBoundingBox().getMaxZ(); ++z) {
-                                BlockPos blockPos = new BlockPos(x, y, z);
-                                scheduledExecutorService.scheduleWithFixedDelay(() -> MinecraftClient.getInstance().execute(() -> {
-                                    world.setBlockState(blockPos, Blocks.DIAMOND_BLOCK.getDefaultState(), Block.SKIP_LIGHTING_UPDATES);
-                                }), 0, 20, TimeUnit.SECONDS);
-                            }
+                for (int x = piece.getBoundingBox().getMinX(); x <= piece.getBoundingBox().getMaxX(); ++x) {
+                    for (int y = piece.getBoundingBox().getMinY(); y <= piece.getBoundingBox().getMaxY(); ++y) {
+                        for (int z = piece.getBoundingBox().getMinZ(); z <= piece.getBoundingBox().getMaxZ(); ++z) {
+                            VillageManager.VILLAGE_BLOCKS.computeIfAbsent(structureStart.getPos(), pos -> new HashSet<>()).add(new BlockPos(x, y, z));
                         }
                     }
                 }
