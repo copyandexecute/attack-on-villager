@@ -1,4 +1,4 @@
-package de.hglabor.attackonvillager.entity;
+package de.hglabor.attackonvillager.entity.ravager;
 
 import de.hglabor.attackonvillager.mixin.world.entity.EntityAccessor;
 import de.hglabor.attackonvillager.mixin.world.entity.LivingEntityAccessor;
@@ -15,26 +15,23 @@ import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.entity.passive.PigEntity;
+import net.minecraft.entity.mob.RavagerEntity;
 import net.minecraft.entity.passive.RabbitEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.tag.StructureTags;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
-public class BigChungusEntity extends RabbitEntity implements ItemSteerable {
+public class RideableRavagerEntity extends RavagerEntity implements ItemSteerable {
     private static final TrackedData<Boolean> SADDLED;
     private static final TrackedData<Integer> BOOST_TIME;
     private final SaddledComponent saddledComponent;
     public boolean highJump = false;
 
-    public BigChungusEntity(EntityType<? extends BigChungusEntity> thisType, World world) {
+    public RideableRavagerEntity(EntityType<? extends RideableRavagerEntity> thisType, World world) {
         super(thisType, world);
         this.saddledComponent = new SaddledComponent(this.dataTracker, BOOST_TIME, SADDLED);
     }
@@ -130,7 +127,7 @@ public class BigChungusEntity extends RabbitEntity implements ItemSteerable {
     }
 
     static {
-        SADDLED = DataTracker.registerData(BigChungusEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
-        BOOST_TIME = DataTracker.registerData(BigChungusEntity.class, TrackedDataHandlerRegistry.INTEGER);
+        SADDLED = DataTracker.registerData(RideableRavagerEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+        BOOST_TIME = DataTracker.registerData(RideableRavagerEntity.class, TrackedDataHandlerRegistry.INTEGER);
     }
 }

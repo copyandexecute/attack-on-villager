@@ -1,16 +1,12 @@
 package de.hglabor.attackonvillager;
 
 import com.mojang.brigadier.context.CommandContext;
-import de.hglabor.attackonvillager.entity.BigChungusEntity;
-import de.hglabor.attackonvillager.entity.BigChungusEntityRenderer;
+import de.hglabor.attackonvillager.entity.ravager.RideableRavagerEntity;
 import de.hglabor.attackonvillager.entity.ModEntities;
-import de.hglabor.attackonvillager.entity.RideableRavagerEntity;
 import de.hglabor.attackonvillager.raid.RaidManager;
 import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
-import net.minecraft.entity.EntityType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
@@ -34,15 +30,13 @@ public final class AttackOnVillagerClient implements ClientModInitializer {
                     }));
         });
         ModEntities.init();
-        EntityRendererRegistry.register(ModEntities.BIG_CHUNGUS, BigChungusEntityRenderer::new);
         VillageManager.INSTANCE.init();
         RaidManager.INSTANCE.init();
         ServerTickEvents.START_WORLD_TICK.register(VillageManager.INSTANCE);
     }
 
     private void test(CommandContext<ServerCommandSource> ctx) {
-        ItemStack mainHandStack = ctx.getSource().getPlayer().getMainHandStack();
-        RideableRavagerEntity rideableRavager = new RideableRavagerEntity(EntityType.RAVAGER, ctx.getSource().getWorld());
+        RideableRavagerEntity rideableRavager = new RideableRavagerEntity(ModEntities.RIDEABLE_RAVAGER, ctx.getSource().getWorld());
         rideableRavager.teleport(ctx.getSource().getPosition().getX(), ctx.getSource().getPosition().getY(), ctx.getSource().getPosition().getZ());
         ctx.getSource().sendMessage(Text.of(String.valueOf(ctx.getSource().getWorld().spawnEntity(rideableRavager))));
     }

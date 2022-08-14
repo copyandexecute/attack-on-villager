@@ -1,5 +1,8 @@
 package de.hglabor.attackonvillager.entity;
 
+import de.hglabor.attackonvillager.entity.ravager.RideableRavagerEntity;
+import de.hglabor.attackonvillager.entity.ravager.RideableRavagerEntityRenderer;
+import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.minecraft.entity.EntityDimensions;
@@ -8,18 +11,21 @@ import net.minecraft.entity.SpawnGroup;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
+import static de.hglabor.attackonvillager.AttackOnVillagerClient.MOD_ID;
+
 public class ModEntities {
-    public static final EntityType<BigChungusEntity> BIG_CHUNGUS;
+    public static final EntityType<RideableRavagerEntity> RIDEABLE_RAVAGER;
 
     public ModEntities() {
     }
 
     public static void init() {
-        Registry.register(Registry.ENTITY_TYPE, new Identifier("biggercrafts", "big_chungus"), BIG_CHUNGUS);
-        FabricDefaultAttributeRegistry.register(BIG_CHUNGUS, BigChungusEntity.createBigChungusAttributes());
+        Registry.register(Registry.ENTITY_TYPE, new Identifier(MOD_ID, "rideable_ravager"), RIDEABLE_RAVAGER);
+        FabricDefaultAttributeRegistry.register(RIDEABLE_RAVAGER, RideableRavagerEntity.createBigChungusAttributes());
+        EntityRendererRegistry.register(ModEntities.RIDEABLE_RAVAGER, RideableRavagerEntityRenderer::new);
     }
 
     static {
-        BIG_CHUNGUS = FabricEntityTypeBuilder.create(SpawnGroup.MISC, BigChungusEntity::new).dimensions(EntityDimensions.fixed(1.2F, 1.5F)).trackRangeChunks(8).build();
+        RIDEABLE_RAVAGER = FabricEntityTypeBuilder.create(SpawnGroup.MISC, RideableRavagerEntity::new).dimensions(EntityDimensions.fixed(1.95f, 2.2f)).trackRangeChunks(8).build();
     }
 }
