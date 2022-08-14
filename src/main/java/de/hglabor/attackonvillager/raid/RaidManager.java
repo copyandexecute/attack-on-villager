@@ -13,6 +13,11 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
+import net.minecraft.nbt.NbtString;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
@@ -34,6 +39,7 @@ public final class RaidManager implements EntityDeathEvent, ServerTickEvents.Sta
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
     public static final RaidManager INSTANCE = new RaidManager();
     private final Map<ChunkPos, Raid> raids = new HashMap<>();
+    private static final String OMINOUS_BANNER_TRANSLATION_KEY = "block.minecraft.ominous_banner";
 
     private RaidManager() {
     }
@@ -101,5 +107,19 @@ public final class RaidManager implements EntityDeathEvent, ServerTickEvents.Sta
             }
         }
         return ActionResult.SUCCESS;
+    }
+
+    /**
+     * kinda scuffed
+     */
+    public boolean isOmniousBanner(ItemStack itemStack) {
+        if (!itemStack.isOf(Items.WHITE_BANNER)) return false;
+        NbtCompound nbt = itemStack.getNbt();
+        if (nbt == null) return false;
+        NbtCompound display = (NbtCompound) nbt.get("display");
+        if (display == null) return false;
+        NbtString name = (NbtString) display.get("Name");
+        if (name == null) return false;
+        return name.toString().contains(OMINOUS_BANNER_TRANSLATION_KEY);
     }
 }
