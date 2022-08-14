@@ -6,6 +6,8 @@
   "mixins": [
     "StructureMixin",
     "server.network.MixinServerPlayNetworkHandler",
+    "world.entity.EntityAccessor",
+    "world.entity.LivingEntityAccessor",
     "world.entity.LivingEntityMixin",
     "world.entity.MerchantEntityMixin"
   ],
