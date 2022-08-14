@@ -3,9 +3,6 @@ package de.hglabor.attackonvillager.raid.wave;
 import de.hglabor.attackonvillager.raid.AbstractWave;
 import de.hglabor.attackonvillager.raid.Raid;
 import de.hglabor.attackonvillager.raid.WaveType;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.dedicated.MinecraftDedicatedServer;
 import net.minecraft.text.Text;
 
 import java.util.concurrent.TimeUnit;

@@ -18,6 +18,7 @@ public abstract class AbstractWave {
     }
 
     protected final void startNextWave() {
+        raid.getBossBar().setPercent(1f);
         raid.setCurrentWave(nextWave());
         raid.getCurrentWave().start();
     }
