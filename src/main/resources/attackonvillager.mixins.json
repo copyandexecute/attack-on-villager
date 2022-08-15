@@ -12,6 +12,7 @@
     "world.entity.MerchantEntityMixin"
   ],
   "client": [
+    "world.entity.ClientPlayerEntityMixin"
   ],
   "server": [
   ],

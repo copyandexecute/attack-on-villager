@@ -2,9 +2,11 @@ package de.hglabor.attackonvillager.entity.ravager;
 
 import de.hglabor.attackonvillager.mixin.world.entity.EntityAccessor;
 import de.hglabor.attackonvillager.mixin.world.entity.LivingEntityAccessor;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ItemSteerable;
+import net.minecraft.entity.JumpingMount;
 import net.minecraft.entity.SaddledComponent;
 import net.minecraft.entity.ai.goal.LookAtEntityGoal;
 import net.minecraft.entity.ai.goal.SwimGoal;
@@ -18,6 +20,7 @@ import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.mob.RavagerEntity;
 import net.minecraft.entity.passive.RabbitEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.MathHelper;
@@ -25,10 +28,11 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
-public class RideableRavagerEntity extends RavagerEntity implements ItemSteerable {
+public class RideableRavagerEntity extends RavagerEntity implements ItemSteerable, JumpingMount {
     private static final TrackedData<Boolean> SADDLED;
     private static final TrackedData<Integer> BOOST_TIME;
     private final SaddledComponent saddledComponent;
+    private int jumpStrength = 0;
     public boolean highJump = false;
 
     public RideableRavagerEntity(EntityType<? extends RideableRavagerEntity> thisType, World world) {
@@ -98,6 +102,9 @@ public class RideableRavagerEntity extends RavagerEntity implements ItemSteerabl
             entity.setMovementSpeed(f);
             this.setMovementInput(new Vec3d(((PlayerEntity) entity2).sidewaysSpeed * 0.5f, movementInput.y, ((PlayerEntity) entity2).forwardSpeed));
             ((LivingEntityAccessor) entity).setBodyTrackingIncrements(0);
+            if (jumpStrength > 0) {
+                entity.setVelocity(Vec3d.ZERO);
+            }
         } else {
             entity.updateLimbs(entity, false);
             entity.setVelocity(Vec3d.ZERO);
@@ -129,5 +136,26 @@ public class RideableRavagerEntity extends RavagerEntity implements ItemSteerabl
     static {
         SADDLED = DataTracker.registerData(RideableRavagerEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
         BOOST_TIME = DataTracker.registerData(RideableRavagerEntity.class, TrackedDataHandlerRegistry.INTEGER);
+    }
+
+    @Override
+    public void setJumpStrength(int strength) {
+        this.jumpStrength = strength;
+    }
+
+    @Override
+    public boolean canJump() {
+        return true;
+    }
+
+    @Override
+    public void startJumping(int height) {
+        //TODO
+    }
+
+
+    @Override
+    public void stopJumping() {
+        MinecraftClient.getInstance().player.sendMessage(Text.of("Stop"));
     }
 }
