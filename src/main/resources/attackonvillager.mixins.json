@@ -9,9 +9,11 @@
     "world.entity.EntityAccessor",
     "world.entity.LivingEntityAccessor",
     "world.entity.LivingEntityMixin",
-    "world.entity.MerchantEntityMixin"
+    "world.entity.MerchantEntityMixin",
+    "world.entity.VillagerEntityMixin"
   ],
   "client": [
+    "render.VillagerEntityRendererMixin",
     "world.entity.ClientPlayerEntityMixin"
   ],
   "server": [
