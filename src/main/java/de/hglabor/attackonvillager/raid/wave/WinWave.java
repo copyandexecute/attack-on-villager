@@ -17,6 +17,7 @@ public class WinWave extends AbstractWave {
 
     @Override
     public void start() {
+        super.start();
         runTaskLater(() -> {
             raid.end();
         }, 5, TimeUnit.SECONDS);
