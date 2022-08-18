@@ -1,6 +1,5 @@
 package de.hglabor.attackonvillager.raid;
 
-import de.hglabor.attackonvillager.raid.wave.KillVillagersWave;
 import de.hglabor.attackonvillager.raid.wave.RobVillagersWave;
 import de.hglabor.attackonvillager.utils.VillagerUtils;
 import net.minecraft.entity.Entity;
@@ -23,10 +22,7 @@ import net.minecraft.util.math.Vec3d;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.List;
-import java.util.Random;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 import static de.hglabor.attackonvillager.AttackOnVillagerClient.MOD_ID;
 
@@ -42,6 +38,7 @@ public class Raid {
     private final Random random = new Random();
     private AbstractWave currentWave = new RobVillagersWave(this);
     private boolean isActive;
+    private final Set<PlayerEntity> participants = new HashSet<>();
 
     public Raid(ServerWorld world, UUID leader, ChunkPos chunkPos, BlockPos center, Set<BlockPos> blocks) {
         this.leader = leader;
@@ -69,6 +66,14 @@ public class Raid {
         isActive = false;
         bossBar.clearPlayers();
         //RaidManager.INSTANCE.removeRaid(chunkPos);
+    }
+
+    public void addParticipant(PlayerEntity participant) {
+        participants.add(participant);
+    }
+
+    public Set<PlayerEntity> getParticipants() {
+        return participants;
     }
 
     private void generateVillagerLoot() {
@@ -108,8 +113,10 @@ public class Raid {
         currentWave.onEntityDeath(entity);
     }
 
-    public void onBlockBreak(BlockPos pos) {
+    public void onBlockBreak(BlockPos pos, ServerPlayerEntity player) {
         currentWave.onBlockBreak(pos);
+        participants.add(player);
+        System.out.println(player.getGameProfile().getName() + " is now a participant");
     }
 
     public AbstractWave getCurrentWave() {
