@@ -35,7 +35,6 @@ import java.util.Set;
 import java.util.UUID;
 
 public class RobVillagersWave extends AbstractWave {
-    private final Set<UUID> villagers = new HashSet<>();
     private final Set<UUID> robbed = new HashSet<>();
     private int villagersToRob;
 
@@ -53,11 +52,7 @@ public class RobVillagersWave extends AbstractWave {
 
     @Override
     public void start() {
-        for (Entity entity : raid.getWorld().getOtherEntities(null, Box.from(Vec3d.ofCenter(raid.getCenter())).expand(150))) {
-            if (entity instanceof VillagerEntity villager) {
-                villagers.add(villager.getUuid());
-            }
-        }
+        super.start();
         villagersToRob = ((random.nextInt(40, 80) * villagers.size()) / 100);
     }
 

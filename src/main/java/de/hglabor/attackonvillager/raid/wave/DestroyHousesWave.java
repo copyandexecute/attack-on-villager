@@ -21,6 +21,7 @@ public class DestroyHousesWave extends AbstractWave {
 
     @Override
     public void start() {
+        super.start();
     }
 
     @Override

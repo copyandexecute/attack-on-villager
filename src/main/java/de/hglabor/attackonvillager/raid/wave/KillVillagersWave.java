@@ -3,20 +3,19 @@ package de.hglabor.attackonvillager.raid.wave;
 import de.hglabor.attackonvillager.raid.AbstractWave;
 import de.hglabor.attackonvillager.raid.Raid;
 import de.hglabor.attackonvillager.raid.WaveType;
+import de.hglabor.attackonvillager.raid.defense.DefenseMethod;
+import de.hglabor.attackonvillager.utils.RandomCollection;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.passive.VillagerEntity;
-import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
-import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Vec3d;
 
-import java.util.HashSet;
-import java.util.Set;
 import java.util.UUID;
 
 public class KillVillagersWave extends AbstractWave {
-    private final Set<UUID> villagers = new HashSet<>();
+    private final RandomCollection<DefenseMethod> defenseMethods = new RandomCollection<DefenseMethod>()
+            .add(30, DefenseMethod.IRON_GOLEM_RIDING)
+            .add(70, DefenseMethod.NOTHING);
 
     public KillVillagersWave(Raid raid) {
         super(raid);
@@ -24,10 +23,16 @@ public class KillVillagersWave extends AbstractWave {
 
     @Override
     public void start() {
-        for (Entity entity : raid.getWorld().getOtherEntities(null, Box.from(Vec3d.ofCenter(raid.getCenter())).expand(300))) {
-            if (entity instanceof VillagerEntity villager) {
-                villagers.add(villager.getUuid());
-            }
+        super.start();
+        defendVillagers();
+    }
+
+
+    private void defendVillagers() {
+        for (UUID villager : villagers) {
+            Entity entity = raid.getWorld().getEntity(villager);
+            if (entity == null) continue;
+            defenseMethods.next().defend(raid, ((VillagerEntity) entity));
         }
     }
 
