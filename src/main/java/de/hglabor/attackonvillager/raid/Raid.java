@@ -1,6 +1,5 @@
 package de.hglabor.attackonvillager.raid;
 
-import de.hglabor.attackonvillager.raid.wave.KillVillagersWave;
 import de.hglabor.attackonvillager.raid.wave.RobVillagersWave;
 import de.hglabor.attackonvillager.utils.VillagerUtils;
 import net.minecraft.entity.Entity;

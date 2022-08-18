@@ -10,6 +10,7 @@
     "world.entity.LivingEntityAccessor",
     "world.entity.LivingEntityMixin",
     "world.entity.MerchantEntityMixin",
+    "world.entity.MobEntityAccessor",
     "world.entity.VillagerEntityMixin"
   ],
   "client": [
