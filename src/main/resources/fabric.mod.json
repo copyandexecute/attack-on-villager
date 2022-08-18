@@ -17,6 +17,9 @@
   "entrypoints": {
     "client": [
       "de.hglabor.attackonvillager.AttackOnVillagerClient"
+    ],
+    "server": [
+      "de.hglabor.attackonvillager.AttackOnVillagerServer"
     ]
   },
   "mixins": [
@@ -27,8 +30,5 @@
     "fabric": "*",
     "minecraft": "~1.19",
     "java": ">=17"
-  },
-  "suggests": {
-    "another-mod": "*"
   }
 }
