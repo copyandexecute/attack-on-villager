@@ -4,7 +4,6 @@ import de.hglabor.attackonvillager.raid.AbstractWave;
 import de.hglabor.attackonvillager.raid.Raid;
 import de.hglabor.attackonvillager.raid.WaveType;
 import de.hglabor.attackonvillager.raid.defense.DefenseMethod;
-import de.hglabor.attackonvillager.utils.RandomCollection;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.passive.VillagerEntity;
@@ -13,10 +12,6 @@ import net.minecraft.text.Text;
 import java.util.UUID;
 
 public class KillVillagersWave extends AbstractWave {
-    private final RandomCollection<DefenseMethod> defenseMethods = new RandomCollection<DefenseMethod>()
-            .add(30, DefenseMethod.IRON_GOLEM_RIDING)
-            .add(70, DefenseMethod.NOTHING);
-
     public KillVillagersWave(Raid raid) {
         super(raid);
     }
@@ -27,6 +22,13 @@ public class KillVillagersWave extends AbstractWave {
         defendVillagers();
     }
 
+    @Override
+    public void initDefenseMethods() {
+        this.defenseMethods
+                .add(25, DefenseMethod.IRON_GOLEM_RIDING)
+                .add(25, DefenseMethod.PANICK)
+                .add(50, DefenseMethod.NOTHING);
+    }
 
     private void defendVillagers() {
         for (UUID villager : villagers) {

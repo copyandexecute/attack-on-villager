@@ -3,10 +3,11 @@ package de.hglabor.attackonvillager.raid.wave;
 import de.hglabor.attackonvillager.raid.AbstractWave;
 import de.hglabor.attackonvillager.raid.Raid;
 import de.hglabor.attackonvillager.raid.WaveType;
+import de.hglabor.attackonvillager.raid.defense.DefenseMethod;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 
-import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -22,6 +23,11 @@ public class DestroyHousesWave extends AbstractWave {
     @Override
     public void start() {
         super.start();
+    }
+
+    @Override
+    public void initDefenseMethods() {
+        defenseMethods.add(100, DefenseMethod.NOTHING);
     }
 
     @Override
@@ -44,6 +50,11 @@ public class DestroyHousesWave extends AbstractWave {
 
     public Set<BlockPos> getDestroyedBlocks() {
         return villageBlocks.stream().filter(pos -> raid.getWorld().getBlockState(pos).isAir()).collect(Collectors.toUnmodifiableSet());
+    }
+
+    @Override
+    public void onBlockBreak(BlockPos pos, PlayerEntity player) {
+        raid.addParticipant(player);
     }
 
     @Override

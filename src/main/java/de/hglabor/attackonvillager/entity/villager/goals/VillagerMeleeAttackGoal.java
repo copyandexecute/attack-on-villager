@@ -1,7 +1,5 @@
 package de.hglabor.attackonvillager.entity.villager.goals;
 
-import java.util.EnumSet;
-
 import de.hglabor.attackonvillager.entity.villager.AttackedVillager;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.Goal;
@@ -10,6 +8,8 @@ import net.minecraft.entity.passive.VillagerEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.predicate.entity.EntityPredicates;
 import net.minecraft.util.Hand;
+
+import java.util.EnumSet;
 
 public class VillagerMeleeAttackGoal extends Goal {
     protected final VillagerEntity villager;

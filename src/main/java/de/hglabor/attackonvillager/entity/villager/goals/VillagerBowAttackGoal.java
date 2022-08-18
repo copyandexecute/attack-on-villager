@@ -1,17 +1,12 @@
 package de.hglabor.attackonvillager.entity.villager.goals;
 
-import java.util.EnumSet;
-
 import de.hglabor.attackonvillager.entity.villager.AttackedVillager;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.RangedAttackMob;
 import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.passive.VillagerEntity;
-import net.minecraft.entity.projectile.ProjectileUtil;
 import net.minecraft.item.BowItem;
-import net.minecraft.item.Items;
+
+import java.util.EnumSet;
 
 public class VillagerBowAttackGoal<T extends VillagerEntity> extends Goal {
     private final T actor;

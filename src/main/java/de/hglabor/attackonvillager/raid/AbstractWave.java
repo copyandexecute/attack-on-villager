@@ -1,6 +1,7 @@
 package de.hglabor.attackonvillager.raid;
 
-import net.minecraft.client.MinecraftClient;
+import de.hglabor.attackonvillager.raid.defense.DefenseMethod;
+import de.hglabor.attackonvillager.utils.RandomCollection;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.passive.VillagerEntity;
@@ -25,6 +26,8 @@ public abstract class AbstractWave {
         this.raid = raid;
     }
 
+    protected final RandomCollection<DefenseMethod> defenseMethods = new RandomCollection<>();
+
     protected final void startNextWave() {
         raid.getBossBar().setPercent(1f);
         raid.setCurrentWave(nextWave());
@@ -36,8 +39,11 @@ public abstract class AbstractWave {
     }
 
     public void start() {
+        initDefenseMethods();
         detectVillagers();
     }
+
+    public abstract void initDefenseMethods();
 
     public abstract AbstractWave nextWave();
 
@@ -53,10 +59,14 @@ public abstract class AbstractWave {
         }
     }
 
+    public RandomCollection<DefenseMethod> getDefenseMethods() {
+        return defenseMethods;
+    }
+
     public void onEntityDeath(LivingEntity entity) {
     }
 
-    public void onBlockBreak(BlockPos pos) {
+    public void onBlockBreak(BlockPos pos, PlayerEntity player) {
     }
 
     public void onInteractEntity(PlayerEntity player, LivingEntity entity) {

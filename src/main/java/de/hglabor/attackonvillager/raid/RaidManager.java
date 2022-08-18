@@ -20,7 +20,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtString;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
@@ -31,6 +30,7 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -92,7 +92,7 @@ public final class RaidManager implements EntityDeathEvent, ServerTickEvents.Sta
         if (nearestVillage != null) {
             Raid raid = raids.get(nearestVillage.getFirst());
             if (raid != null) {
-                raid.onBlockBreak(pos, (ServerPlayerEntity) player);
+                raid.onBlockBreak(pos, player);
             }
         }
     }

@@ -22,7 +22,13 @@ import net.minecraft.util.math.Vec3d;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
+import java.util.Random;
+import java.util.Set;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 import static de.hglabor.attackonvillager.AttackOnVillagerClient.MOD_ID;
 
@@ -38,7 +44,7 @@ public class Raid {
     private final Random random = new Random();
     private AbstractWave currentWave = new RobVillagersWave(this);
     private boolean isActive;
-    private final Set<PlayerEntity> participants = new HashSet<>();
+    private final Set<UUID> participants = new HashSet<>();
 
     public Raid(ServerWorld world, UUID leader, ChunkPos chunkPos, BlockPos center, Set<BlockPos> blocks) {
         this.leader = leader;
@@ -46,6 +52,7 @@ public class Raid {
         this.center = center;
         this.blocks = blocks;
         this.world = world;
+        this.participants.add(leader);
     }
 
     public void start() {
@@ -68,12 +75,16 @@ public class Raid {
         //RaidManager.INSTANCE.removeRaid(chunkPos);
     }
 
-    public void addParticipant(PlayerEntity participant) {
-        participants.add(participant);
+    public boolean addParticipant(PlayerEntity participant) {
+        return participants.add(participant.getUuid());
     }
 
-    public Set<PlayerEntity> getParticipants() {
+    public Set<UUID> getParticipants() {
         return participants;
+    }
+
+    public List<PlayerEntity> getOnlineParticipants() {
+        return participants.stream().map(world::getEntity).filter(Objects::nonNull).map(entity -> (PlayerEntity) entity).collect(Collectors.toList());
     }
 
     private void generateVillagerLoot() {
@@ -113,10 +124,8 @@ public class Raid {
         currentWave.onEntityDeath(entity);
     }
 
-    public void onBlockBreak(BlockPos pos, ServerPlayerEntity player) {
-        currentWave.onBlockBreak(pos);
-        participants.add(player);
-        System.out.println(player.getGameProfile().getName() + " is now a participant");
+    public void onBlockBreak(BlockPos pos, PlayerEntity player) {
+        currentWave.onBlockBreak(pos, player);
     }
 
     public AbstractWave getCurrentWave() {

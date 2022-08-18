@@ -4,6 +4,7 @@ import de.hglabor.attackonvillager.mixin.world.entity.MobEntityAccessor;
 import de.hglabor.attackonvillager.raid.Raid;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.goal.ActiveTargetGoal;
+import net.minecraft.entity.ai.goal.MoveThroughVillageGoal;
 import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.passive.VillagerEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -19,6 +20,10 @@ public enum DefenseMethod {
         ((MobEntityAccessor) ironGolemEntity).getTargetSelector().add(2, new ActiveTargetGoal<>(ironGolemEntity, RaiderEntity.class, false));
         raid.getWorld().spawnEntity(ironGolemEntity);
         villager.startRiding(ironGolemEntity);
+    }),
+
+    PANICK((raid, villager) -> {
+        ((MobEntityAccessor) villager).getGoalSelector().add(3, new MoveThroughVillageGoal(villager, 2.0, false, 8, () -> true));
     }),
     NOTHING((raid, villager) -> {
 
