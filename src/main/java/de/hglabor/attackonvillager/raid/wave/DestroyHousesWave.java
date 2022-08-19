@@ -27,7 +27,9 @@ public class DestroyHousesWave extends AbstractWave {
 
     @Override
     public void initDefenseMethods() {
-        defenseMethods.add(100, DefenseMethod.NOTHING);
+        defenseMethods
+                .add(50, DefenseMethod.NOTHING)
+                .add(50, DefenseMethod.SPAWN_IRON_GOLEMS);
     }
 
     @Override

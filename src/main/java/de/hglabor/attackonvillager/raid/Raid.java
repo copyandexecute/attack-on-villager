@@ -22,9 +22,11 @@ import net.minecraft.util.math.Vec3d;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
@@ -34,7 +36,7 @@ import static de.hglabor.attackonvillager.AttackOnVillagerClient.MOD_ID;
 
 public class Raid {
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
-    private static final double SEARCH_RADIUS = 300;
+    private static final double SEARCH_RADIUS = 100;
     private final UUID leader;
     private final ChunkPos chunkPos;
     private final BlockPos center;
@@ -44,7 +46,9 @@ public class Raid {
     private final Random random = new Random();
     private AbstractWave currentWave = new RobVillagersWave(this);
     private boolean isActive;
+    private boolean isWon;
     private final Set<UUID> participants = new HashSet<>();
+    private final List<ItemStack> winLoot = new ArrayList<>();
 
     public Raid(ServerWorld world, UUID leader, ChunkPos chunkPos, BlockPos center, Set<BlockPos> blocks) {
         this.leader = leader;
@@ -72,6 +76,7 @@ public class Raid {
     public void end() {
         isActive = false;
         bossBar.clearPlayers();
+        isWon = true;
         //RaidManager.INSTANCE.removeRaid(chunkPos);
     }
 
@@ -83,6 +88,18 @@ public class Raid {
         return participants;
     }
 
+    public Random getRandom() {
+        return random;
+    }
+
+    public static double getSearchRadius() {
+        return SEARCH_RADIUS;
+    }
+
+    public Optional<PlayerEntity> getLeader() {
+      return Optional.ofNullable(world.getPlayerByUuid(leader));
+    }
+
     public List<PlayerEntity> getOnlineParticipants() {
         return participants.stream().map(world::getEntity).filter(Objects::nonNull).map(entity -> (PlayerEntity) entity).collect(Collectors.toList());
     }
@@ -90,10 +107,11 @@ public class Raid {
     private void generateVillagerLoot() {
         for (Entity entity : getWorld().getOtherEntities(null, Box.from(Vec3d.ofCenter(getCenter())).expand(100))) {
             if (entity instanceof VillagerEntity villager) {
-                List<ItemStack> professionItems = VillagerUtils.createItemPoolFromProfessions(entity, villager.getVillagerData().getProfession());
+                List<ItemStack> professionItems = VillagerUtils.createItemPoolFromProfession(entity, villager.getVillagerData().getProfession());
                 SimpleInventory villagerInventory = villager.getInventory();
                 for (int i = 0; i < random.nextInt(villagerInventory.size()); i++) {
                     villagerInventory.setStack(random.nextInt(villagerInventory.size()), professionItems.get(random.nextInt(professionItems.size())));
+                    winLoot.add(professionItems.get(random.nextInt(professionItems.size())));
                 }
             }
         }
@@ -136,7 +154,7 @@ public class Raid {
         this.currentWave = currentWave;
     }
 
-    public UUID getLeader() {
+    public UUID getLeaderUUID() {
         return leader;
     }
 
@@ -158,5 +176,13 @@ public class Raid {
 
     public ServerBossBar getBossBar() {
         return bossBar;
+    }
+
+    public List<ItemStack> getWinLoot() {
+        return winLoot;
+    }
+
+    public boolean isWon() {
+        return isWon;
     }
 }

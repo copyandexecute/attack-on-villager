@@ -9,13 +9,17 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 
 public abstract class AbstractWave {
     protected final Raid raid;
@@ -41,6 +45,7 @@ public abstract class AbstractWave {
     public void start() {
         initDefenseMethods();
         detectVillagers();
+        defendVillagers();
     }
 
     public abstract void initDefenseMethods();
@@ -59,6 +64,14 @@ public abstract class AbstractWave {
         }
     }
 
+    protected void defendVillagers() {
+        for (UUID villager : villagers) {
+            Entity entity = raid.getWorld().getEntity(villager);
+            if (entity == null) continue;
+            defenseMethods.next().defend(raid, ((VillagerEntity) entity));
+        }
+    }
+
     public RandomCollection<DefenseMethod> getDefenseMethods() {
         return defenseMethods;
     }
@@ -74,5 +87,24 @@ public abstract class AbstractWave {
 
     public void runTaskLater(Runnable runnable, int delay, TimeUnit unit) {
         Executors.newScheduledThreadPool(1).schedule(() -> raid.getWorld().getServer().execute(runnable), delay, unit);
+    }
+
+    public void runTaskTimer(Task runnable, int period, TimeUnit unit) {
+        ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
+        ScheduledFuture<?> scheduledFuture = executorService.scheduleAtFixedRate(() -> raid.getWorld().getServer().execute(runnable), 0, period, unit);
+        runnable.setFuture(scheduledFuture);
+    }
+
+    //Lasst mich
+    protected abstract static class Task implements Runnable {
+        private ScheduledFuture<?> future;
+
+        protected final void cancel() {
+            future.cancel(true);
+        }
+
+        private void setFuture(ScheduledFuture<?> future) {
+            this.future = future;
+        }
     }
 }

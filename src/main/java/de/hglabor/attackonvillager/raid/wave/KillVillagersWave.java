@@ -19,23 +19,15 @@ public class KillVillagersWave extends AbstractWave {
     @Override
     public void start() {
         super.start();
-        defendVillagers();
     }
 
     @Override
     public void initDefenseMethods() {
         this.defenseMethods
-                .add(25, DefenseMethod.IRON_GOLEM_RIDING)
-                .add(25, DefenseMethod.PANICK)
-                .add(50, DefenseMethod.NOTHING);
-    }
-
-    private void defendVillagers() {
-        for (UUID villager : villagers) {
-            Entity entity = raid.getWorld().getEntity(villager);
-            if (entity == null) continue;
-            defenseMethods.next().defend(raid, ((VillagerEntity) entity));
-        }
+                .add(30, DefenseMethod.IRON_GOLEM_RIDING)
+                .add(30, DefenseMethod.PANICK)
+                .add(30, DefenseMethod.ATTACK)
+                .add(10, DefenseMethod.NOTHING);
     }
 
     @Override
