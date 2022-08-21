@@ -3,6 +3,7 @@ package de.hglabor.attackonvillager;
 import com.mojang.brigadier.context.CommandContext;
 import de.hglabor.attackonvillager.effect.VillainOfTheVillageEffect;
 import de.hglabor.attackonvillager.entity.ModEntities;
+import de.hglabor.attackonvillager.entity.ravager.RideableRavagerEntity;
 import de.hglabor.attackonvillager.entity.villager.goals.VillagerBowAttackGoal;
 import de.hglabor.attackonvillager.mixin.world.entity.MobEntityAccessor;
 import de.hglabor.attackonvillager.raid.RaidManager;
@@ -54,12 +55,16 @@ public final class AttackOnVillagerClient implements ClientModInitializer {
     }
 
     private void test(CommandContext<ServerCommandSource> ctx) {
-        //RideableRavagerEntity rideableRavager = new RideableRavagerEntity(ModEntities.RIDEABLE_RAVAGER, ctx.getSource().getWorld());
-        //rideableRavager.teleport(ctx.getSource().getPosition().getX(), ctx.getSource().getPosition().getY(), ctx.getSource().getPosition().getZ());
+        RideableRavagerEntity rideableRavager = new RideableRavagerEntity(ModEntities.RIDEABLE_RAVAGER, ctx.getSource().getWorld());
+        rideableRavager.teleport(ctx.getSource().getPosition().getX(), ctx.getSource().getPosition().getY(), ctx.getSource().getPosition().getZ());
+
 
         ServerWorld world = ctx.getSource().getWorld();
         Vec3d position = ctx.getSource().getPosition();
-        VillagerEntity villagerEntity = new VillagerEntity(EntityType.VILLAGER, world);
+
+        world.spawnEntity(rideableRavager);
+
+        /*VillagerEntity villagerEntity = new VillagerEntity(EntityType.VILLAGER, world);
         villagerEntity.teleport(position.getX(), position.getY(), position.getZ());
         villagerEntity.setStackInHand(Hand.MAIN_HAND, Items.DIAMOND_SWORD.getDefaultStack());
         ((MobEntityAccessor) villagerEntity).getGoalSelector().add(0, new VillagerBowAttackGoal<>(villagerEntity, 1.0, 20, 15.0f));
@@ -75,6 +80,6 @@ public final class AttackOnVillagerClient implements ClientModInitializer {
         //villagerEntity.setStackInHand(Hand.OFF_HAND,Items.DIAMOND_SWORD.getDefaultStack());
         ctx.getSource().sendMessage(Text.of(String.valueOf(world.spawnEntity(villagerEntity))));
 
-        //ctx.getSource().sendMessage(Text.of(String.valueOf(ctx.getSource().getWorld().spawnEntity(rideableRavager))));
+        //ctx.getSource().sendMessage(Text.of(String.valueOf(ctx.getSource().getWorld().spawnEntity(rideableRavager))));*/
     }
 }

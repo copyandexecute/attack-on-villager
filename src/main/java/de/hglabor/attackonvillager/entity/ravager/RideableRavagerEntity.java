@@ -1,5 +1,7 @@
 package de.hglabor.attackonvillager.entity.ravager;
 
+import de.hglabor.attackonvillager.entity.ModEntities;
+import de.hglabor.attackonvillager.entity.canon.CanonEntity;
 import de.hglabor.attackonvillager.mixin.world.entity.EntityAccessor;
 import de.hglabor.attackonvillager.mixin.world.entity.LivingEntityAccessor;
 import net.minecraft.client.MinecraftClient;
@@ -18,7 +20,6 @@ import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.mob.RavagerEntity;
-import net.minecraft.entity.passive.RabbitEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
@@ -31,9 +32,8 @@ import org.jetbrains.annotations.Nullable;
 public class RideableRavagerEntity extends RavagerEntity implements ItemSteerable, JumpingMount {
     private static final TrackedData<Boolean> SADDLED;
     private static final TrackedData<Integer> BOOST_TIME;
+    private static final TrackedData<Integer> CANON_STRENGTH;
     private final SaddledComponent saddledComponent;
-    private int jumpStrength = 0;
-    public boolean highJump = false;
 
     public RideableRavagerEntity(EntityType<? extends RideableRavagerEntity> thisType, World world) {
         super(thisType, world);
@@ -45,14 +45,15 @@ public class RideableRavagerEntity extends RavagerEntity implements ItemSteerabl
         this.goalSelector.add(11, new LookAtEntityGoal(this, PlayerEntity.class, 10.0F));
     }
 
-    public static DefaultAttributeContainer.Builder createBigChungusAttributes() {
-        return RabbitEntity.createRabbitAttributes().add(EntityAttributes.GENERIC_MAX_HEALTH, 10.0);
+    public static DefaultAttributeContainer.Builder createRidableRavagerAttributes() {
+        return MobEntity.createMobAttributes().add(EntityAttributes.GENERIC_MAX_HEALTH, 100.0);
     }
 
     protected void initDataTracker() {
         super.initDataTracker();
         this.dataTracker.startTracking(SADDLED, false);
         this.dataTracker.startTracking(BOOST_TIME, 0);
+        this.dataTracker.startTracking(CANON_STRENGTH, 0);
     }
 
     public ActionResult interactMob(PlayerEntity player, Hand hand) {
@@ -102,7 +103,7 @@ public class RideableRavagerEntity extends RavagerEntity implements ItemSteerabl
             entity.setMovementSpeed(f);
             this.setMovementInput(new Vec3d(((PlayerEntity) entity2).sidewaysSpeed * 0.5f, movementInput.y, ((PlayerEntity) entity2).forwardSpeed));
             ((LivingEntityAccessor) entity).setBodyTrackingIncrements(0);
-            if (jumpStrength > 0) {
+            if (getCanonStrength() > 0) {
                 entity.setVelocity(Vec3d.ZERO);
             }
         } else {
@@ -136,11 +137,17 @@ public class RideableRavagerEntity extends RavagerEntity implements ItemSteerabl
     static {
         SADDLED = DataTracker.registerData(RideableRavagerEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
         BOOST_TIME = DataTracker.registerData(RideableRavagerEntity.class, TrackedDataHandlerRegistry.INTEGER);
+        CANON_STRENGTH = DataTracker.registerData(RideableRavagerEntity.class, TrackedDataHandlerRegistry.INTEGER);
     }
 
     @Override
     public void setJumpStrength(int strength) {
-        this.jumpStrength = strength;
+    }
+
+    public void setCanonStrength(int strength) {
+        if (strength == 0) return;
+        this.dataTracker.set(CANON_STRENGTH, strength);
+        System.out.println(getCanonStrength());
     }
 
     @Override
@@ -150,12 +157,29 @@ public class RideableRavagerEntity extends RavagerEntity implements ItemSteerabl
 
     @Override
     public void startJumping(int height) {
-        //TODO
+        System.out.println(getCanonStrength());
+        double rotX = this.getYaw();
+        double rotY = this.getPitch();
+        double xz = Math.cos(Math.toRadians(rotY));
+        Vec3d vector = new Vec3d(-xz * Math.sin(Math.toRadians(rotX)), -Math.sin(Math.toRadians(rotY)), xz * Math.cos(Math.toRadians(rotX)));
+
+        CanonEntity canonEntity = new CanonEntity(ModEntities.CANON, this.getWorld());
+        canonEntity.setPosition(getEyePos());
+        canonEntity.setVelocity(vector.multiply(3));
+        canonEntity.setPower(getCanonStrength());
+
+
+        canonEntity.setHeadYaw(this.getHeadYaw());
+
+        this.getWorld().spawnEntity(canonEntity);
+    }
+
+    public int getCanonStrength() {
+        return this.dataTracker.get(CANON_STRENGTH);
     }
 
 
     @Override
     public void stopJumping() {
-        MinecraftClient.getInstance().player.sendMessage(Text.of("Stop"));
     }
 }
