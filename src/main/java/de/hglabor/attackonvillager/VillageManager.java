@@ -5,6 +5,7 @@ import de.hglabor.attackonvillager.raid.Raid;
 import de.hglabor.attackonvillager.raid.RaidManager;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.Items;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -67,7 +68,7 @@ public final class VillageManager implements ServerTickEvents.StartWorldTick {
     public void onStartTick(ServerWorld world) {
         if (world.equals(world.getServer().getOverworld())) {
             for (ServerPlayerEntity player : world.getPlayers()) {
-                if (!player.getMainHandStack().isOf(Items.DIAMOND_SWORD)) continue;
+                if (!RaidManager.INSTANCE.isOmniousBanner(player.getEquippedStack(EquipmentSlot.HEAD))) continue;
                 Pair<ChunkPos, BlockPos> nearestVillage = getNearestVillage(world, player, 100);
                 if (nearestVillage == null) continue;
                 Raid raid = RaidManager.INSTANCE.getOrCreateRaid(

@@ -8,6 +8,7 @@ import de.hglabor.attackonvillager.entity.villager.goals.VillagerBowAttackGoal;
 import de.hglabor.attackonvillager.mixin.world.entity.MobEntityAccessor;
 import de.hglabor.attackonvillager.raid.RaidManager;
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
@@ -31,7 +32,7 @@ import org.slf4j.LoggerFactory;
 
 import static net.minecraft.server.command.CommandManager.literal;
 
-public final class AttackOnVillagerClient implements ClientModInitializer {
+public final class AttackOnVillagerClient implements ClientModInitializer, ModInitializer {
     public static final String MOD_ID = "attackonvillager";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
     public static final StatusEffect VILLAIN_OF_THE_VILLAGE_EFFECT = new VillainOfTheVillageEffect();
@@ -55,5 +56,10 @@ public final class AttackOnVillagerClient implements ClientModInitializer {
     }
 
     private void test(CommandContext<ServerCommandSource> ctx) {
+    }
+
+    @Override
+    public void onInitialize() {
+
     }
 }

@@ -155,7 +155,6 @@ public class RideableRavagerEntity extends RavagerEntity implements ItemSteerabl
 
     @Override
     public void startJumping(int height) {
-        System.out.println("##JUMPINGHEIGHT WAS ANKAM" + height);
         double rotX = this.getYaw();
         double rotY = this.getPitch();
         double xz = Math.cos(Math.toRadians(rotY));
@@ -166,7 +165,7 @@ public class RideableRavagerEntity extends RavagerEntity implements ItemSteerabl
         canonEntity.setVelocity(vector.multiply(3));
         canonEntity.setPower(height);
 
-        canonEntity.setHeadYaw(this.getHeadYaw());
+        //TODO ravager head yaw/pitch towards player
 
         this.getWorld().spawnEntity(canonEntity);
     }

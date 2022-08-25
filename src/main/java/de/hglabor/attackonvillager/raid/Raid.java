@@ -1,5 +1,6 @@
 package de.hglabor.attackonvillager.raid;
 
+import de.hglabor.attackonvillager.raid.wave.KillVillagersWave;
 import de.hglabor.attackonvillager.raid.wave.RobVillagersWave;
 import de.hglabor.attackonvillager.utils.VillagerUtils;
 import net.minecraft.entity.Entity;
@@ -44,7 +45,7 @@ public class Raid {
     private final ServerWorld world;
     private final ServerBossBar bossBar = new ServerBossBar(Text.empty(), BossBar.Color.RED, BossBar.Style.PROGRESS);
     private final Random random = new Random();
-    private AbstractWave currentWave = new RobVillagersWave(this);
+    private AbstractWave currentWave;
     private boolean isActive;
     private boolean isWon;
     private final Set<UUID> participants = new HashSet<>();
@@ -57,6 +58,7 @@ public class Raid {
         this.blocks = blocks;
         this.world = world;
         this.participants.add(leader);
+        this.currentWave = random.nextBoolean() ? new RobVillagersWave(this) : new KillVillagersWave(this);
     }
 
     public void start() {

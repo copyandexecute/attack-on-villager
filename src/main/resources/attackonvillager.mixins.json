@@ -5,6 +5,7 @@
   "compatibilityLevel": "JAVA_17",
   "mixins": [
     "StructureMixin",
+    "advancement.PlayerAdvancementTrackerMixin",
     "server.network.MixinServerPlayNetworkHandler",
     "world.entity.EntityAccessor",
     "world.entity.LivingEntityAccessor",

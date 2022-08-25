@@ -3,11 +3,15 @@ package de.hglabor.attackonvillager.raid;
 import com.mojang.datafixers.util.Pair;
 import de.hglabor.attackonvillager.AttackOnVillagerServer;
 import de.hglabor.attackonvillager.VillageManager;
+import de.hglabor.attackonvillager.entity.ModEntities;
+import de.hglabor.attackonvillager.entity.ravager.RideableRavagerEntity;
+import de.hglabor.attackonvillager.events.AdvancementDoneEvent;
 import de.hglabor.attackonvillager.events.EntityDeathEvent;
 import de.hglabor.attackonvillager.events.InteractEntityEvent;
 import de.hglabor.attackonvillager.events.VillagerDamageEvent;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
+import net.minecraft.advancement.Advancement;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.Entity;
@@ -21,6 +25,7 @@ import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtString;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.EntityHitResult;
@@ -37,7 +42,7 @@ import java.util.Set;
 
 import static de.hglabor.attackonvillager.AttackOnVillagerClient.MOD_ID;
 
-public final class RaidManager implements EntityDeathEvent, ServerTickEvents.StartWorldTick, PlayerBlockBreakEvents.After, InteractEntityEvent, VillagerDamageEvent {
+public final class RaidManager implements EntityDeathEvent, ServerTickEvents.StartWorldTick, PlayerBlockBreakEvents.After, InteractEntityEvent, VillagerDamageEvent, AdvancementDoneEvent {
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
     public static final RaidManager INSTANCE = new RaidManager();
     private final Map<ChunkPos, Raid> raids = new HashMap<>();
@@ -51,6 +56,7 @@ public final class RaidManager implements EntityDeathEvent, ServerTickEvents.Sta
         ServerTickEvents.START_WORLD_TICK.register(this);
         InteractEntityEvent.EVENT.register(this);
         VillagerDamageEvent.EVENT.register(this);
+        AdvancementDoneEvent.EVENT.register(this);
     }
 
     public void removeRaid(ChunkPos pos) {
@@ -138,6 +144,16 @@ public final class RaidManager implements EntityDeathEvent, ServerTickEvents.Sta
             if (raid != null) {
                 raid.addParticipant(player);
             }
+        }
+    }
+
+    @Override
+    public void onAdvancementDone(PlayerEntity player, Advancement advancement, String criterionName) {
+        if ("raid_captain".equalsIgnoreCase(criterionName)) {
+            RideableRavagerEntity ravagerEntity = ModEntities.RIDEABLE_RAVAGER.create(player.getWorld());
+            ravagerEntity.setPosition(player.getPos());
+            player.getWorld().spawnEntity(ravagerEntity);
+            player.sendMessage(Text.of("Du hast einen Ravager bekommen!"));
         }
     }
 }
