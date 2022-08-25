@@ -145,9 +145,7 @@ public class RideableRavagerEntity extends RavagerEntity implements ItemSteerabl
     }
 
     public void setCanonStrength(int strength) {
-        if (strength == 0) return;
         this.dataTracker.set(CANON_STRENGTH, strength);
-        System.out.println(getCanonStrength());
     }
 
     @Override
@@ -157,7 +155,7 @@ public class RideableRavagerEntity extends RavagerEntity implements ItemSteerabl
 
     @Override
     public void startJumping(int height) {
-        System.out.println(getCanonStrength());
+        System.out.println("##JUMPINGHEIGHT WAS ANKAM" + height);
         double rotX = this.getYaw();
         double rotY = this.getPitch();
         double xz = Math.cos(Math.toRadians(rotY));
@@ -166,8 +164,7 @@ public class RideableRavagerEntity extends RavagerEntity implements ItemSteerabl
         CanonEntity canonEntity = new CanonEntity(ModEntities.CANON, this.getWorld());
         canonEntity.setPosition(getEyePos());
         canonEntity.setVelocity(vector.multiply(3));
-        canonEntity.setPower(getCanonStrength());
-
+        canonEntity.setPower(height);
 
         canonEntity.setHeadYaw(this.getHeadYaw());
 

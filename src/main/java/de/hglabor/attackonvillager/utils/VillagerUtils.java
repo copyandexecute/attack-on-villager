@@ -62,7 +62,6 @@ public final class VillagerUtils {
         BlockPos.Mutable pos = new BlockPos.Mutable(x, world.getHeight(), z);
         for (int i = world.getDimension().height(); i > world.getDimension().minY(); i--) {
             pos.setY(i);
-            System.out.println(i);
             BlockState blockState = world.getBlockState(pos);
             if (blockState.isAir()) continue;
             if (blockState.getBlock() instanceof LeavesBlock) continue;

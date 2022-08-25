@@ -38,6 +38,6 @@ public class ModEntities {
 
     static {
         RIDEABLE_RAVAGER = FabricEntityTypeBuilder.create(SpawnGroup.MISC, RideableRavagerEntity::new).dimensions(EntityDimensions.fixed(1.95f, 2.2f)).trackRangeChunks(8).build();
-        CANON = FabricEntityTypeBuilder.create(SpawnGroup.MISC, CanonEntity::new).dimensions(EntityDimensions.fixed(1, 1)).trackRangeChunks(8).build();
+        CANON = FabricEntityTypeBuilder.create(SpawnGroup.MISC, CanonEntity::new).dimensions(EntityDimensions.fixed(1, 1)).trackRangeBlocks(64).trackedUpdateRate(64).trackRangeChunks(64).build();
     }
 }

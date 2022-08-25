@@ -55,31 +55,5 @@ public final class AttackOnVillagerClient implements ClientModInitializer {
     }
 
     private void test(CommandContext<ServerCommandSource> ctx) {
-        RideableRavagerEntity rideableRavager = new RideableRavagerEntity(ModEntities.RIDEABLE_RAVAGER, ctx.getSource().getWorld());
-        rideableRavager.teleport(ctx.getSource().getPosition().getX(), ctx.getSource().getPosition().getY(), ctx.getSource().getPosition().getZ());
-
-
-        ServerWorld world = ctx.getSource().getWorld();
-        Vec3d position = ctx.getSource().getPosition();
-
-        world.spawnEntity(rideableRavager);
-
-        /*VillagerEntity villagerEntity = new VillagerEntity(EntityType.VILLAGER, world);
-        villagerEntity.teleport(position.getX(), position.getY(), position.getZ());
-        villagerEntity.setStackInHand(Hand.MAIN_HAND, Items.DIAMOND_SWORD.getDefaultStack());
-        ((MobEntityAccessor) villagerEntity).getGoalSelector().add(0, new VillagerBowAttackGoal<>(villagerEntity, 1.0, 20, 15.0f));
-        ((MobEntityAccessor) villagerEntity).getTargetSelector().add(0, new ActiveTargetGoal<>(villagerEntity, PlayerEntity.class, false));
-        ((MobEntityAccessor) villagerEntity).getTargetSelector().add(1, new ActiveTargetGoal<>(villagerEntity, RaiderEntity.class, false));
-
-        IronGolemEntity ironGolemEntity = EntityType.IRON_GOLEM.create(world);
-        ironGolemEntity.teleport(villagerEntity.getPos().getX(), villagerEntity.getPos().getY(), villagerEntity.getPos().getZ());
-        world.spawnEntity(ironGolemEntity);
-        villagerEntity.startRiding(ironGolemEntity);
-
-
-        //villagerEntity.setStackInHand(Hand.OFF_HAND,Items.DIAMOND_SWORD.getDefaultStack());
-        ctx.getSource().sendMessage(Text.of(String.valueOf(world.spawnEntity(villagerEntity))));
-
-        //ctx.getSource().sendMessage(Text.of(String.valueOf(ctx.getSource().getWorld().spawnEntity(rideableRavager))));*/
     }
 }
