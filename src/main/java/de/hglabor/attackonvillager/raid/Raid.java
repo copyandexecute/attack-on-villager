@@ -107,7 +107,7 @@ public class Raid {
     }
 
     private void generateVillagerLoot() {
-        for (Entity entity : getWorld().getOtherEntities(null, Box.from(Vec3d.ofCenter(getCenter())).expand(100))) {
+        for (Entity entity : getWorld().getOtherEntities(null, Box.from(Vec3d.ofCenter(getCenter())).expand(Raid.getSearchRadius()))) {
             if (entity instanceof VillagerEntity villager) {
                 List<ItemStack> professionItems = VillagerUtils.createItemPoolFromProfession(entity, villager.getVillagerData().getProfession());
                 SimpleInventory villagerInventory = villager.getInventory();

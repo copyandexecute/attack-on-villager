@@ -29,16 +29,17 @@ public class WinWave extends AbstractWave {
     @Override
     public void start() {
         super.start();
+        runTaskLater(raid::end, 5, TimeUnit.SECONDS);
         for (PlayerEntity player : raid.getOnlineParticipants()) {
             player.addStatusEffect(new StatusEffectInstance(AttackOnVillagerClient.VILLAIN_OF_THE_VILLAGE_EFFECT, 24000, 1)); // 24000 ticks = 1 minecraft day
         }
         itemRain();
-        runTaskLater(raid::end, 5, TimeUnit.SECONDS);
     }
 
     private void itemRain() {
         runTaskTimer(new Task() {
-            private final BlockPos pos = raid.getCenter().withY(VillagerUtils.getHighestY(raid.getWorld(), raid.getCenter().getX(), raid.getCenter().getZ()));
+            //private final BlockPos pos = raid.getCenter().withY(VillagerUtils.getHighestY(raid.getWorld(), raid.getCenter().getX(), raid.getCenter().getZ()));
+            private final BlockPos pos = raid.getLeader().get().getBlockPos();
             private final Stack<ItemStack> loot = VillagerUtils.toStack(raid.getWinLoot());
             private double angle;
 

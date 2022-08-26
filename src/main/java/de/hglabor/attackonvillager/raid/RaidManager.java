@@ -32,13 +32,13 @@ import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
+import net.minecraft.world.chunk.Chunk;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 import static de.hglabor.attackonvillager.AttackOnVillagerClient.MOD_ID;
 
@@ -63,11 +63,11 @@ public final class RaidManager implements EntityDeathEvent, ServerTickEvents.Sta
         raids.remove(pos);
     }
 
-    public Raid getOrCreateRaid(ChunkPos chunkPos, BlockPos blockPos, PlayerEntity leader, Set<BlockPos> blocks) {
+    public Raid getOrCreateRaid(ChunkPos chunkPos, BlockPos blockPos, PlayerEntity leader, Chunk chunk) {
         if (raids.containsKey(chunkPos)) {
             return raids.get(chunkPos);
         } else {
-            Raid raid = new Raid((ServerWorld) leader.getWorld(), leader.getUuid(), chunkPos, blockPos, blocks);
+            Raid raid = new Raid((ServerWorld) leader.getWorld(), leader.getUuid(), chunkPos, blockPos, VillageManager.INSTANCE.getVillageBlocks(chunk));
             raids.put(chunkPos, raid);
             raid.start();
             return raid;
@@ -76,7 +76,7 @@ public final class RaidManager implements EntityDeathEvent, ServerTickEvents.Sta
 
     @Override
     public void onEntityDeath(LivingEntity entity) {
-        Pair<ChunkPos, BlockPos> nearestVillage = VillageManager.INSTANCE.getNearestVillage((ServerWorld) entity.getWorld(), entity, 100);
+        Pair<ChunkPos, BlockPos> nearestVillage = VillageManager.INSTANCE.getNearestVillage((ServerWorld) entity.getWorld(), entity, (int) Raid.getSearchRadius());
         if (nearestVillage != null) {
             Raid raid = raids.get(nearestVillage.getFirst());
             if (raid != null) {

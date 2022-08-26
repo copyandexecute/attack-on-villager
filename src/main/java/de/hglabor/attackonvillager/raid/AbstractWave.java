@@ -4,6 +4,8 @@ import de.hglabor.attackonvillager.raid.defense.DefenseMethod;
 import de.hglabor.attackonvillager.utils.RandomCollection;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.passive.VillagerEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.BlockPos;
@@ -57,9 +59,10 @@ public abstract class AbstractWave {
     public abstract void updateBossBar();
 
     private void detectVillagers() {
-        for (Entity entity : raid.getWorld().getOtherEntities(null, Box.from(Vec3d.ofCenter(raid.getCenter())).expand(300))) {
+        for (Entity entity : raid.getWorld().getOtherEntities(null, Box.from(Vec3d.ofCenter(raid.getCenter())).expand(Raid.getSearchRadius()))) {
             if (entity instanceof VillagerEntity villager) {
                 villagers.add(villager.getUuid());
+                villager.addStatusEffect(new StatusEffectInstance(StatusEffects.GLOWING,30*20));
             }
         }
     }
@@ -67,8 +70,9 @@ public abstract class AbstractWave {
     protected void defendVillagers() {
         for (UUID villager : villagers) {
             Entity entity = raid.getWorld().getEntity(villager);
-            if (entity == null) continue;
-            defenseMethods.next().defend(raid, ((VillagerEntity) entity));
+            if (entity instanceof VillagerEntity villagerEntity) {
+                defenseMethods.next().defend(raid, villagerEntity);
+            }
         }
     }
 

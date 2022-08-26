@@ -1,6 +1,8 @@
 package de.hglabor.attackonvillager.raid.defense;
 
+import de.hglabor.attackonvillager.entity.villager.AttackedVillager;
 import de.hglabor.attackonvillager.entity.villager.goals.VillagerBowAttackGoal;
+import de.hglabor.attackonvillager.entity.villager.goals.VillagerMeleeAttackGoal;
 import de.hglabor.attackonvillager.mixin.world.entity.MobEntityAccessor;
 import de.hglabor.attackonvillager.raid.Raid;
 import de.hglabor.attackonvillager.utils.VillagerUtils;
@@ -12,6 +14,7 @@ import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.passive.VillagerEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.raid.RaiderEntity;
+import net.minecraft.item.Items;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.village.VillagerProfession;
 
@@ -49,9 +52,11 @@ public enum DefenseMethod {
     ATTACK((raid, villager) -> {
         VillagerProfession profession = villager.getVillagerData().getProfession();
         if (VillagerProfession.FLETCHER.equals(profession)) {
+            ((AttackedVillager) villager).setWeapon(Items.BOW.getDefaultStack());
             ((MobEntityAccessor) villager).getGoalSelector().add(0, new VillagerBowAttackGoal<>(villager, 1.0, 20, 15.0f));
         } else {
-            ((MobEntityAccessor) villager).getGoalSelector().add(0, new MeleeAttackGoal(villager, 1.0, false));
+            ((AttackedVillager) villager).setWeapon(Items.DIAMOND_SWORD.getDefaultStack());
+            ((MobEntityAccessor) villager).getGoalSelector().add(0, new VillagerMeleeAttackGoal(villager, 1.0, false));
         }
         ((MobEntityAccessor) villager).getTargetSelector().add(0, new ActiveTargetGoal<>(villager, PlayerEntity.class, false));
         ((MobEntityAccessor) villager).getTargetSelector().add(1, new ActiveTargetGoal<>(villager, RaiderEntity.class, false));
