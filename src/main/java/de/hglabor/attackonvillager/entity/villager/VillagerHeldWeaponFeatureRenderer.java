@@ -28,16 +28,18 @@ public class VillagerHeldWeaponFeatureRenderer<T extends VillagerEntity, M exten
     @Override
     public void render(MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i, T livingEntity, float f, float g, float h, float j, float k, float l) {
         ItemStack weapon = ((AttackedVillager) livingEntity).getWeapon();
-        matrixStack.push();
-        if (SWORDS.contains(weapon.getItem())) {
-            matrixStack.translate(0.0, -0.15f, -0.4f);
-            matrixStack.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(-45));
-            this.heldItemRenderer.renderItem(livingEntity, weapon, ModelTransformation.Mode.THIRD_PERSON_LEFT_HAND, false, matrixStack, vertexConsumerProvider, i);
-        } else {
-            matrixStack.translate(0.0, 0.1f, -0.6f);
-            matrixStack.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(-90));
-            this.heldItemRenderer.renderItem(livingEntity, weapon, ModelTransformation.Mode.THIRD_PERSON_LEFT_HAND, false, matrixStack, vertexConsumerProvider, i);
+        if (!weapon.isOf(Items.AIR)) {
+            matrixStack.push();
+            if (SWORDS.contains(weapon.getItem())) {
+                matrixStack.translate(0.0, -0.15f, -0.4f);
+                matrixStack.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(-45));
+                this.heldItemRenderer.renderItem(livingEntity, weapon, ModelTransformation.Mode.THIRD_PERSON_LEFT_HAND, false, matrixStack, vertexConsumerProvider, i);
+            } else {
+                matrixStack.translate(0.0, 0.1f, -0.6f);
+                matrixStack.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(-90));
+                this.heldItemRenderer.renderItem(livingEntity, weapon, ModelTransformation.Mode.THIRD_PERSON_LEFT_HAND, false, matrixStack, vertexConsumerProvider, i);
+            }
+            matrixStack.pop();
         }
-        matrixStack.pop();
     }
 }

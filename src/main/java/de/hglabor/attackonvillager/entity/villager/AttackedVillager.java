@@ -6,7 +6,7 @@ import net.minecraft.item.Items;
 
 public interface AttackedVillager {
     default ItemStack getWeapon() {
-        return Items.DIAMOND_SWORD.getDefaultStack();
+        return Items.AIR.getDefaultStack();
     }
 
     void setWeapon(ItemStack weapon);

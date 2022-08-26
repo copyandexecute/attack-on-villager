@@ -6,6 +6,9 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
+import net.minecraft.entity.data.DataTracker;
+import net.minecraft.entity.data.TrackedData;
+import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.passive.MerchantEntity;
@@ -18,6 +21,9 @@ import net.minecraft.item.Items;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.village.TradeOffer;
+import net.minecraft.village.VillagerData;
+import net.minecraft.village.VillagerProfession;
+import net.minecraft.village.VillagerType;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
@@ -27,6 +33,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(VillagerEntity.class)
 public abstract class VillagerEntityMixin extends MerchantEntity implements AttackedVillager {
+    private static final TrackedData<ItemStack> WEAPON = DataTracker.registerData(VillagerEntity.class, TrackedDataHandlerRegistry.ITEM_STACK);
+
+    private ItemStack weapon = Items.AIR.getDefaultStack();
+
     public VillagerEntityMixin(EntityType<? extends MerchantEntity> entityType, World world) {
         super(entityType, world);
     }
@@ -70,6 +80,21 @@ public abstract class VillagerEntityMixin extends MerchantEntity implements Atta
         persistentProjectileEntity.setVelocity(d, e + g * (double) 0.2f, f, 1.6f, 14 - this.world.getDifficulty().getId() * 4);
         this.playSound(SoundEvents.ENTITY_ARROW_SHOOT, 1.0f, 1.0f / (this.getRandom().nextFloat() * 0.4f + 0.8f));
         this.world.spawnEntity(persistentProjectileEntity);
+    }
+
+    @Override
+    public void setWeapon(ItemStack weapon) {
+        this.dataTracker.set(WEAPON, weapon);
+    }
+
+    @Override
+    public ItemStack getWeapon() {
+        return this.dataTracker.get(WEAPON);
+    }
+
+    @Inject(method = "initDataTracker", at = @At("TAIL"))
+    private void injected(CallbackInfo ci) {
+        this.dataTracker.startTracking(WEAPON, Items.AIR.getDefaultStack());
     }
 
     protected PersistentProjectileEntity createArrowProjectile(ItemStack arrow, float damageModifier) {
