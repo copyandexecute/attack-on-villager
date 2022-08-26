@@ -46,7 +46,7 @@ public class RideableRavagerEntity extends RavagerEntity implements ItemSteerabl
     }
 
     public static DefaultAttributeContainer.Builder createRidableRavagerAttributes() {
-        return MobEntity.createMobAttributes().add(EntityAttributes.GENERIC_MAX_HEALTH, 100.0);
+        return MobEntity.createMobAttributes().add(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE, 0.75).add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 12.0).add(EntityAttributes.GENERIC_ATTACK_KNOCKBACK, 1.5).add(EntityAttributes.GENERIC_MAX_HEALTH, 100.0);
     }
 
     protected void initDataTracker() {
@@ -166,7 +166,7 @@ public class RideableRavagerEntity extends RavagerEntity implements ItemSteerabl
         canonEntity.setPower(height);
 
         //TODO ravager head yaw/pitch towards player
-
+        this.tryAttack(null);
         this.getWorld().spawnEntity(canonEntity);
     }
 
