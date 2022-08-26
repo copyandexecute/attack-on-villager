@@ -30,7 +30,7 @@ public class ModEntities {
         Registry.register(Registry.ENTITY_TYPE, new Identifier(MOD_ID, "rideable_ravager"), RIDEABLE_RAVAGER);
         Registry.register(Registry.ENTITY_TYPE, new Identifier(MOD_ID, "canon"), CANON);
         FabricDefaultAttributeRegistry.register(RIDEABLE_RAVAGER, RideableRavagerEntity.createRidableRavagerAttributes());
-        FabricDefaultAttributeRegistry.register(EntityType.CAT, CanonEntity.createCanonAttributes());
+       // FabricDefaultAttributeRegistry.register(CANON, CanonEntity.createCanonAttributes());
         EntityRendererRegistry.register(ModEntities.RIDEABLE_RAVAGER, RideableRavagerEntityRenderer::new);
         EntityRendererRegistry.register(ModEntities.CANON, CanonEntityRenderer::new);
         EntityModelLayerRegistry.registerModelLayer(CANON_MODEL_LAYER, CanonEntityModel::getTexturedModelData);
