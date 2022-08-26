@@ -166,7 +166,7 @@ public class RideableRavagerEntity extends RavagerEntity implements ItemSteerabl
         canonEntity.setPower(height);
 
         //TODO ravager head yaw/pitch towards player
-        this.tryAttack(null);
+        this.tryAttack(canonEntity);
         this.getWorld().spawnEntity(canonEntity);
     }
 
