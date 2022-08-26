@@ -61,7 +61,7 @@ public class RobVillagersWave extends AbstractWave {
 
     @Override
     public AbstractWave nextWave() {
-        return random.nextBoolean() ? new KillVillagersWave(raid) : new DestroyHousesWave(raid);
+        return new KillVillagersWave(raid);
     }
 
     @Override
@@ -72,18 +72,22 @@ public class RobVillagersWave extends AbstractWave {
     @Override
     public void onInteractEntity(PlayerEntity player, LivingEntity entity) {
         if (entity instanceof InventoryOwner invEntity) {
-            player.openHandledScreen(new NamedScreenHandlerFactory() {
-                @Override
-                public Text getDisplayName() {
-                    return Text.of("Villager Inventory");
-                }
+            //Ich weiß... LOL
+            runTaskLater(() -> {
+                player.openHandledScreen(new NamedScreenHandlerFactory() {
+                    @Override
+                    public Text getDisplayName() {
+                        return Text.of("Villager Inventory");
+                    }
 
-                @Override
-                public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
-                    return new GenericContainerScreenHandler(ScreenHandlerType.GENERIC_9X4, syncId, inv, invEntity.getInventory(), 4);
-                }
-            });
-            robbed.add(entity.getUuid());
+                    @Override
+                    public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
+                        return new GenericContainerScreenHandler(ScreenHandlerType.GENERIC_9X4, syncId, inv, invEntity.getInventory(), 4);
+                    }
+                });
+                robbed.add(entity.getUuid());
+
+            }, 1, TimeUnit.MILLISECONDS);
         }
     }
 
