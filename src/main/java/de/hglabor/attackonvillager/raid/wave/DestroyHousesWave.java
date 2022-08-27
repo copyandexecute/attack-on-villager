@@ -9,16 +9,13 @@ import de.hglabor.attackonvillager.raid.AbstractWave;
 import de.hglabor.attackonvillager.raid.Raid;
 import de.hglabor.attackonvillager.raid.WaveType;
 import de.hglabor.attackonvillager.raid.defense.DefenseMethod;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.passive.VillagerEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 
 import java.util.Random;
 import java.util.Set;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class DestroyHousesWave extends AbstractWave {

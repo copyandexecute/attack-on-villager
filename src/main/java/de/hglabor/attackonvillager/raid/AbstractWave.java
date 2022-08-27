@@ -14,10 +14,11 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.raid.RaiderEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
-import org.jetbrains.annotations.Nullable;
+import net.minecraft.world.World;
 
 import java.util.HashSet;
 import java.util.Random;
@@ -27,7 +28,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
-import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public abstract class AbstractWave {
@@ -121,6 +121,9 @@ public abstract class AbstractWave {
         ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
         ScheduledFuture<?> scheduledFuture = executorService.scheduleAtFixedRate(() -> raid.getWorld().getServer().execute(runnable), 0, period, unit);
         runnable.setFuture(scheduledFuture);
+    }
+
+    public void onGoatHorn(World world, PlayerEntity user, Hand hand) {
     }
 
     //Lasst mich

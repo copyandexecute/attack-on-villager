@@ -4,7 +4,6 @@ import de.hglabor.attackonvillager.entity.ModEntities;
 import de.hglabor.attackonvillager.entity.canon.CanonEntity;
 import de.hglabor.attackonvillager.mixin.world.entity.EntityAccessor;
 import de.hglabor.attackonvillager.mixin.world.entity.LivingEntityAccessor;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ItemSteerable;
@@ -28,7 +27,6 @@ import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.passive.MerchantEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.raid.RaiderEntity;
-import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.MathHelper;
@@ -53,7 +51,7 @@ public class RideableRavagerEntity extends RavagerEntity implements ItemSteerabl
         this.goalSelector.add(5, new WanderAroundFarGoal(this, 0.4));
         this.goalSelector.add(6, new LookAtEntityGoal(this, PlayerEntity.class, 6.0f));
         this.goalSelector.add(10, new LookAtEntityGoal(this, MobEntity.class, 8.0f));
-        this.targetSelector.add(2, new RevengeGoal(this, RaiderEntity.class).setGroupRevenge());
+        this.targetSelector.add(2, new RevengeGoal(this, RaiderEntity.class, PlayerEntity.class).setGroupRevenge());
         this.targetSelector.add(4, new ActiveTargetGoal<>(this, MerchantEntity.class, true));
         this.targetSelector.add(4, new ActiveTargetGoal<>(this, IronGolemEntity.class, true));
     }

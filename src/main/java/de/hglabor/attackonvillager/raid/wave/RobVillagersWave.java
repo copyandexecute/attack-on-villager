@@ -9,30 +9,19 @@ import de.hglabor.attackonvillager.raid.AbstractWave;
 import de.hglabor.attackonvillager.raid.Raid;
 import de.hglabor.attackonvillager.raid.WaveType;
 import de.hglabor.attackonvillager.raid.defense.DefenseMethod;
-import de.hglabor.attackonvillager.utils.VillagerUtils;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.InventoryOwner;
-import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.mob.RavagerEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.screen.GenericContainerScreenHandler;
 import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.ScreenHandlerType;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
-import net.minecraft.util.math.BlockPos;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
-import java.util.Stack;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -55,9 +44,9 @@ public class RobVillagersWave extends AbstractWave {
     @Override
     public void initDefenseMethods() {
         this.defenseMethods
-                .add(30, DefenseMethod.IRON_GOLEM_RIDING)
-                .add(40, DefenseMethod.PANICK)
-                .add(30, DefenseMethod.ATTACK);
+                .add(15, DefenseMethod.IRON_GOLEM_RIDING)
+                .add(30, DefenseMethod.PANICK)
+                .add(55, DefenseMethod.ATTACK);
     }
 
     @Override

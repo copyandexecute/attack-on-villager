@@ -12,7 +12,6 @@ import de.hglabor.attackonvillager.events.InteractEntityEvent;
 import de.hglabor.attackonvillager.events.VillagerDamageEvent;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
-import net.fabricmc.fabric.api.event.player.UseItemCallback;
 import net.minecraft.advancement.Advancement;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -30,7 +29,6 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
-import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
@@ -162,11 +160,14 @@ public final class RaidManager implements EntityDeathEvent, ServerTickEvents.Sta
     }
 
 
-
     @Override
     public void onGoatHorn(World world, PlayerEntity user, Hand hand) {
-        if (hand == Hand.MAIN_HAND) {
-            user.sendMessage(Text.of("hiy"));
+        Pair<ChunkPos, BlockPos> nearestVillage = VillageManager.INSTANCE.getNearestVillage(AttackOnVillagerServer.SERVER.getWorld(user.getWorld().getRegistryKey()), user, (int) Raid.getSearchRadius());
+        if (nearestVillage != null) {
+            Raid raid = raids.get(nearestVillage.getFirst());
+            if (raid != null) {
+                raid.onGoatHorn(world, user, hand);
+            }
         }
     }
 }

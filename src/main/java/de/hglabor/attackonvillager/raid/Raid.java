@@ -17,10 +17,12 @@ import net.minecraft.item.Items;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.World;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -148,6 +150,10 @@ public class Raid {
 
     public void onBlockBreak(BlockPos pos, PlayerEntity player) {
         currentWave.onBlockBreak(pos, player);
+    }
+
+    public void onGoatHorn(World world, PlayerEntity user, Hand hand) {
+        currentWave.onGoatHorn( world,  user,  hand);
     }
 
     public AbstractWave getCurrentWave() {
