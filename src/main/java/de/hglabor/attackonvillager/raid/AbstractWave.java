@@ -91,7 +91,7 @@ public abstract class AbstractWave {
         int delay = 0;
         for (int i = 0; i < amount; i++) {
             runTaskLater(() -> {
-                ModifiedPillagerEntity pillager = new ModifiedPillagerEntity(EntityType.PILLAGER, raid.getWorld());
+                RaiderEntity pillager = raiders.next().get();
                 Vec3d position = raid.getLeader().get().getPos().add(0, 2, 0);
                 pillager.setPosition(position);
                 pillager.initialize(raid.getWorld(), raid.getWorld().getLocalDifficulty(new BlockPos(position)), SpawnReason.NATURAL, null, null);

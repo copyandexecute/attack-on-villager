@@ -52,10 +52,10 @@ public class RobVillagersWave extends AbstractWave {
     @Override
     public void initRaiders() {
         this.raiders
-                .add(15, () -> new ModifiedIllusionerEntity(EntityType.ILLUSIONER, raid.getWorld()))
+                .add(25, () -> new ModifiedIllusionerEntity(EntityType.ILLUSIONER, raid.getWorld()))
                 .add(5, () -> new RideableRavagerEntity(ModEntities.RIDEABLE_RAVAGER, raid.getWorld()))
-                .add(60, () -> new ModifiedPillagerEntity(EntityType.PILLAGER, raid.getWorld()))
-                .add(20, () -> new ModifiedVindicatorEntity(EntityType.VINDICATOR, raid.getWorld()));
+                .add(40, () -> new ModifiedPillagerEntity(EntityType.PILLAGER, raid.getWorld()))
+                .add(30, () -> new ModifiedVindicatorEntity(EntityType.VINDICATOR, raid.getWorld()));
     }
 
     @Override
