@@ -36,7 +36,7 @@ public class DestroyHousesWave extends AbstractWave {
         defenseMethods
                 .add(50, DefenseMethod.NOTHING)
                 .add(50, DefenseMethod.SPAWN_IRON_GOLEMS);
-        spawnPillagers(random.nextInt(3, 10));
+        spawnPillagers(random.nextInt(1, 5));
     }
 
     @Override

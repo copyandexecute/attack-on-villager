@@ -152,7 +152,7 @@ public class Raid {
         currentWave.onBlockBreak(pos, player);
     }
 
-    public void onGoatHorn(World world, PlayerEntity user, Hand hand) {
+    public void onGoatHorn(ServerWorld world, PlayerEntity user, Hand hand) {
         currentWave.onGoatHorn( world,  user,  hand);
     }
 

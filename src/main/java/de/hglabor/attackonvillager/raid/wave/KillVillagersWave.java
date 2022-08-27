@@ -25,7 +25,7 @@ public class KillVillagersWave extends AbstractWave {
     @Override
     public void start() {
         super.start();
-        spawnPillagers(random.nextInt(3, 10));
+        spawnPillagers(random.nextInt(2, 8));
     }
 
     @Override

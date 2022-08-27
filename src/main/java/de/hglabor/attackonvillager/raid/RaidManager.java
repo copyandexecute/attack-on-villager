@@ -162,11 +162,12 @@ public final class RaidManager implements EntityDeathEvent, ServerTickEvents.Sta
 
     @Override
     public void onGoatHorn(World world, PlayerEntity user, Hand hand) {
-        Pair<ChunkPos, BlockPos> nearestVillage = VillageManager.INSTANCE.getNearestVillage(AttackOnVillagerServer.SERVER.getWorld(user.getWorld().getRegistryKey()), user, (int) Raid.getSearchRadius());
+        ServerWorld serverWorld = AttackOnVillagerServer.SERVER.getWorld(user.getWorld().getRegistryKey());
+        Pair<ChunkPos, BlockPos> nearestVillage = VillageManager.INSTANCE.getNearestVillage(serverWorld, user, (int) Raid.getSearchRadius());
         if (nearestVillage != null) {
             Raid raid = raids.get(nearestVillage.getFirst());
             if (raid != null) {
-                raid.onGoatHorn(world, user, hand);
+                raid.onGoatHorn(serverWorld, user, hand);
             }
         }
     }

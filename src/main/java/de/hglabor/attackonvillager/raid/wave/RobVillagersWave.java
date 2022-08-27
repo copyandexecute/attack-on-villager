@@ -62,7 +62,7 @@ public class RobVillagersWave extends AbstractWave {
     public void start() {
         super.start();
         villagersToRob = ((random.nextInt(40, 80) * villagers.size()) / 100);
-        spawnPillagers(random.nextInt(2, 10));
+        spawnPillagers(random.nextInt(1, 2));
     }
 
     @Override

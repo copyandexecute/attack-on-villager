@@ -35,8 +35,8 @@ public enum DefenseMethod {
 
     SPAWN_IRON_GOLEMS((raid, villager) -> {
         BlockPos center = raid.getCenter();
-        int x = raid.getRandom().nextBoolean() ? raid.getRandom().nextInt((int) Raid.getSearchRadius()) : -raid.getRandom().nextInt((int) Raid.getSearchRadius());
-        int z = raid.getRandom().nextBoolean() ? raid.getRandom().nextInt((int) Raid.getSearchRadius()) : -raid.getRandom().nextInt((int) Raid.getSearchRadius());
+        int x = raid.getRandom().nextBoolean() ? raid.getRandom().nextInt(30) : -raid.getRandom().nextInt(30);
+        int z = raid.getRandom().nextBoolean() ? raid.getRandom().nextInt(30) : -raid.getRandom().nextInt(30);
         BlockPos.Mutable blockPos = center.add(x, 0, z).mutableCopy();
         int y = VillagerUtils.getHighestY(raid.getWorld(), x, z);
         blockPos.setY(y);

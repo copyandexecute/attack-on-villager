@@ -12,6 +12,7 @@ import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.passive.VillagerEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.raid.RaiderEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Hand;
@@ -59,6 +60,7 @@ public abstract class AbstractWave {
     }
 
     public abstract void initDefenseMethods();
+
     public abstract void initRaiders();
 
     public abstract AbstractWave nextWave();
@@ -71,7 +73,7 @@ public abstract class AbstractWave {
         for (Entity entity : raid.getWorld().getOtherEntities(null, Box.from(Vec3d.ofCenter(raid.getCenter())).expand(Raid.getSearchRadius()))) {
             if (entity instanceof VillagerEntity villager) {
                 villagers.add(villager.getUuid());
-                villager.addStatusEffect(new StatusEffectInstance(StatusEffects.GLOWING, 30 * 20));
+                //villager.addStatusEffect(new StatusEffectInstance(StatusEffects.GLOWING, 30 * 20));
             }
         }
     }
@@ -92,9 +94,9 @@ public abstract class AbstractWave {
                 ModifiedPillagerEntity pillager = new ModifiedPillagerEntity(EntityType.PILLAGER, raid.getWorld());
                 Vec3d position = raid.getLeader().get().getPos().add(0, 2, 0);
                 pillager.setPosition(position);
-                pillager.initialize(raid.getWorld(),raid.getWorld().getLocalDifficulty(new BlockPos(position)), SpawnReason.NATURAL,null,null);
+                pillager.initialize(raid.getWorld(), raid.getWorld().getLocalDifficulty(new BlockPos(position)), SpawnReason.NATURAL, null, null);
                 raid.getWorld().spawnEntity(pillager);
-                raid.getWorld().playSound(null,new BlockPos(position), SoundEvents.BLOCK_WOOD_PLACE, SoundCategory.BLOCKS,1f,1f);
+                raid.getWorld().playSound(null, new BlockPos(position), SoundEvents.BLOCK_WOOD_PLACE, SoundCategory.BLOCKS, 1f, 1f);
             }, delay, TimeUnit.MILLISECONDS);
             delay += 200;
         }
@@ -123,7 +125,13 @@ public abstract class AbstractWave {
         runnable.setFuture(scheduledFuture);
     }
 
-    public void onGoatHorn(World world, PlayerEntity user, Hand hand) {
+    public void onGoatHorn(ServerWorld world, PlayerEntity user, Hand hand) {
+        for (UUID uuid : villagers) {
+            Entity entity = world.getEntity(uuid);
+            if (entity instanceof VillagerEntity villager) {
+                villager.addStatusEffect(new StatusEffectInstance(StatusEffects.GLOWING, 3 * 20));
+            }
+        }
     }
 
     //Lasst mich
