@@ -71,6 +71,10 @@ public class WinWave extends AbstractWave {
     }
 
     @Override
+    public void initRaiders() {
+    }
+
+    @Override
     public AbstractWave nextWave() {
         return null;
     }

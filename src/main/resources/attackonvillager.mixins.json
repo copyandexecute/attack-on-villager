@@ -5,6 +5,7 @@
   "compatibilityLevel": "JAVA_17",
   "mixins": [
     "advancement.PlayerAdvancementTrackerMixin",
+    "item.GoatHornItemMixin",
     "server.network.MixinServerPlayNetworkHandler",
     "world.entity.EntityAccessor",
     "world.entity.LivingEntityAccessor",

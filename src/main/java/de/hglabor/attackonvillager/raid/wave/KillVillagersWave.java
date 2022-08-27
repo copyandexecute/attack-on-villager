@@ -1,10 +1,16 @@
 package de.hglabor.attackonvillager.raid.wave;
 
+import de.hglabor.attackonvillager.entity.ModEntities;
+import de.hglabor.attackonvillager.entity.pillager.ModifiedIllusionerEntity;
+import de.hglabor.attackonvillager.entity.pillager.ModifiedPillagerEntity;
+import de.hglabor.attackonvillager.entity.pillager.ModifiedVindicatorEntity;
+import de.hglabor.attackonvillager.entity.ravager.RideableRavagerEntity;
 import de.hglabor.attackonvillager.raid.AbstractWave;
 import de.hglabor.attackonvillager.raid.Raid;
 import de.hglabor.attackonvillager.raid.WaveType;
 import de.hglabor.attackonvillager.raid.defense.DefenseMethod;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.passive.VillagerEntity;
 import net.minecraft.text.Text;
@@ -19,6 +25,7 @@ public class KillVillagersWave extends AbstractWave {
     @Override
     public void start() {
         super.start();
+        spawnPillagers(random.nextInt(3, 10));
     }
 
     @Override
@@ -29,6 +36,16 @@ public class KillVillagersWave extends AbstractWave {
                 .add(30, DefenseMethod.ATTACK)
                 .add(10, DefenseMethod.NOTHING);
     }
+
+    @Override
+    public void initRaiders() {
+        this.raiders
+                .add(15, () -> new ModifiedIllusionerEntity(EntityType.ILLUSIONER, raid.getWorld()))
+                .add(5, () -> new RideableRavagerEntity(ModEntities.RIDEABLE_RAVAGER, raid.getWorld()))
+                .add(60, () -> new ModifiedPillagerEntity(EntityType.PILLAGER, raid.getWorld()))
+                .add(20, () -> new ModifiedVindicatorEntity(EntityType.VINDICATOR, raid.getWorld()));
+    }
+
 
     @Override
     public void tick() {

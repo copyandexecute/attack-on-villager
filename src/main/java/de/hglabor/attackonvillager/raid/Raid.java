@@ -13,6 +13,7 @@ import net.minecraft.entity.passive.VillagerEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
@@ -117,6 +118,7 @@ public class Raid {
                 }
             }
         }
+        winLoot.add(Items.GOAT_HORN.getDefaultStack());
     }
 
     public void strikeLightning(BlockPos pos, Boolean cosmetic) {

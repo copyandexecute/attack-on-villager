@@ -7,10 +7,12 @@ import de.hglabor.attackonvillager.entity.ModEntities;
 import de.hglabor.attackonvillager.entity.ravager.RideableRavagerEntity;
 import de.hglabor.attackonvillager.events.AdvancementDoneEvent;
 import de.hglabor.attackonvillager.events.EntityDeathEvent;
+import de.hglabor.attackonvillager.events.GoatHornEvent;
 import de.hglabor.attackonvillager.events.InteractEntityEvent;
 import de.hglabor.attackonvillager.events.VillagerDamageEvent;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
+import net.fabricmc.fabric.api.event.player.UseItemCallback;
 import net.minecraft.advancement.Advancement;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -28,6 +30,7 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
+import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
@@ -42,7 +45,7 @@ import java.util.Map;
 
 import static de.hglabor.attackonvillager.AttackOnVillagerClient.MOD_ID;
 
-public final class RaidManager implements EntityDeathEvent, ServerTickEvents.StartWorldTick, PlayerBlockBreakEvents.After, InteractEntityEvent, VillagerDamageEvent, AdvancementDoneEvent {
+public final class RaidManager implements EntityDeathEvent, ServerTickEvents.StartWorldTick, PlayerBlockBreakEvents.After, GoatHornEvent, InteractEntityEvent, VillagerDamageEvent, AdvancementDoneEvent {
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
     public static final RaidManager INSTANCE = new RaidManager();
     private final Map<ChunkPos, Raid> raids = new HashMap<>();
@@ -57,6 +60,7 @@ public final class RaidManager implements EntityDeathEvent, ServerTickEvents.Sta
         InteractEntityEvent.EVENT.register(this);
         VillagerDamageEvent.EVENT.register(this);
         AdvancementDoneEvent.EVENT.register(this);
+        GoatHornEvent.EVENT.register(this);
     }
 
     public void removeRaid(ChunkPos pos) {
@@ -154,6 +158,15 @@ public final class RaidManager implements EntityDeathEvent, ServerTickEvents.Sta
             ravagerEntity.setPosition(player.getPos());
             player.getWorld().spawnEntity(ravagerEntity);
             player.sendMessage(Text.of("Du hast einen Ravager bekommen!"));
+        }
+    }
+
+
+
+    @Override
+    public void onGoatHorn(World world, PlayerEntity user, Hand hand) {
+        if (hand == Hand.MAIN_HAND) {
+            user.sendMessage(Text.of("hiy"));
         }
     }
 }

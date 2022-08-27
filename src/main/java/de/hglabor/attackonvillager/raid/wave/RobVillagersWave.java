@@ -1,13 +1,20 @@
 package de.hglabor.attackonvillager.raid.wave;
 
+import de.hglabor.attackonvillager.entity.ModEntities;
+import de.hglabor.attackonvillager.entity.pillager.ModifiedIllusionerEntity;
+import de.hglabor.attackonvillager.entity.pillager.ModifiedPillagerEntity;
+import de.hglabor.attackonvillager.entity.pillager.ModifiedVindicatorEntity;
+import de.hglabor.attackonvillager.entity.ravager.RideableRavagerEntity;
 import de.hglabor.attackonvillager.raid.AbstractWave;
 import de.hglabor.attackonvillager.raid.Raid;
 import de.hglabor.attackonvillager.raid.WaveType;
 import de.hglabor.attackonvillager.raid.defense.DefenseMethod;
 import de.hglabor.attackonvillager.utils.VillagerUtils;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.InventoryOwner;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.mob.RavagerEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
@@ -54,9 +61,19 @@ public class RobVillagersWave extends AbstractWave {
     }
 
     @Override
+    public void initRaiders() {
+        this.raiders
+                .add(15, () -> new ModifiedIllusionerEntity(EntityType.ILLUSIONER, raid.getWorld()))
+                .add(5, () -> new RideableRavagerEntity(ModEntities.RIDEABLE_RAVAGER, raid.getWorld()))
+                .add(60, () -> new ModifiedPillagerEntity(EntityType.PILLAGER, raid.getWorld()))
+                .add(20, () -> new ModifiedVindicatorEntity(EntityType.VINDICATOR, raid.getWorld()));
+    }
+
+    @Override
     public void start() {
         super.start();
         villagersToRob = ((random.nextInt(40, 80) * villagers.size()) / 100);
+        spawnPillagers(random.nextInt(2, 10));
     }
 
     @Override

@@ -1,13 +1,19 @@
 package de.hglabor.attackonvillager.raid;
 
+import de.hglabor.attackonvillager.entity.pillager.ModifiedPillagerEntity;
 import de.hglabor.attackonvillager.raid.defense.DefenseMethod;
 import de.hglabor.attackonvillager.utils.RandomCollection;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.passive.VillagerEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.raid.RaiderEntity;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
@@ -22,6 +28,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 public abstract class AbstractWave {
     protected final Raid raid;
@@ -33,6 +40,7 @@ public abstract class AbstractWave {
     }
 
     protected final RandomCollection<DefenseMethod> defenseMethods = new RandomCollection<>();
+    protected final RandomCollection<Supplier<RaiderEntity>> raiders = new RandomCollection<>();
 
     protected final void startNextWave() {
         raid.getBossBar().setPercent(1f);
@@ -51,6 +59,7 @@ public abstract class AbstractWave {
     }
 
     public abstract void initDefenseMethods();
+    public abstract void initRaiders();
 
     public abstract AbstractWave nextWave();
 
@@ -62,7 +71,7 @@ public abstract class AbstractWave {
         for (Entity entity : raid.getWorld().getOtherEntities(null, Box.from(Vec3d.ofCenter(raid.getCenter())).expand(Raid.getSearchRadius()))) {
             if (entity instanceof VillagerEntity villager) {
                 villagers.add(villager.getUuid());
-                villager.addStatusEffect(new StatusEffectInstance(StatusEffects.GLOWING,30*20));
+                villager.addStatusEffect(new StatusEffectInstance(StatusEffects.GLOWING, 30 * 20));
             }
         }
     }
@@ -73,6 +82,21 @@ public abstract class AbstractWave {
             if (entity instanceof VillagerEntity villagerEntity) {
                 defenseMethods.next().defend(raid, villagerEntity);
             }
+        }
+    }
+
+    protected void spawnPillagers(int amount) {
+        int delay = 0;
+        for (int i = 0; i < amount; i++) {
+            runTaskLater(() -> {
+                ModifiedPillagerEntity pillager = new ModifiedPillagerEntity(EntityType.PILLAGER, raid.getWorld());
+                Vec3d position = raid.getLeader().get().getPos().add(0, 2, 0);
+                pillager.setPosition(position);
+                pillager.initialize(raid.getWorld(),raid.getWorld().getLocalDifficulty(new BlockPos(position)), SpawnReason.NATURAL,null,null);
+                raid.getWorld().spawnEntity(pillager);
+                raid.getWorld().playSound(null,new BlockPos(position), SoundEvents.BLOCK_WOOD_PLACE, SoundCategory.BLOCKS,1f,1f);
+            }, delay, TimeUnit.MILLISECONDS);
+            delay += 200;
         }
     }
 
