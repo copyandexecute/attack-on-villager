@@ -54,6 +54,7 @@ public abstract class AbstractWave {
     }
 
     public void start() {
+        initRaiders();
         initDefenseMethods();
         detectVillagers();
         defendVillagers();
