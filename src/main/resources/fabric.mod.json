@@ -3,13 +3,15 @@
   "id": "attackonvillager",
   "version": "${version}",
   "name": "AttackOnVillager",
-  "description": "You can attack villages.",
+  "description": "You can attack villages but they fight back.",
   "authors": [
-    "NoRiskk"
+    "NoRiskk",
+    "copyandexecute"
   ],
   "contact": {
     "homepage": "https://github.com/copyandexecute/attack-on-villager",
-    "sources": "https://github.com/copyandexecute/attack-on-villager"
+    "sources": "https://github.com/copyandexecute/attack-on-villager",
+    "issues": "https://github.com/copyandexecute/attack-on-villager/issues"
   },
   "license": "CC0-1.0",
   "icon": "assets/attackonvillager/icon.png",

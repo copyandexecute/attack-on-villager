@@ -4,7 +4,7 @@
       "item": "minecraft:stone_sword"
     },
     "title": "Raid Captain",
-    "description": "Werde zu einem Raid Captain indem du...",
+    "description": "Become the captain of a raid by wearing a omnious banner!",
     "frame": "task",
     "show_toast": true,
     "announce_to_chat": true,

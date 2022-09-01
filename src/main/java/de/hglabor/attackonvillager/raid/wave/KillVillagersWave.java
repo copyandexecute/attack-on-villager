@@ -95,7 +95,7 @@ public class KillVillagersWave extends AbstractWave {
 
     @Override
     public void updateBossBar() {
-        raid.getBossBar().setName(Text.of("Raid - Villagers übrig: " + (villagers.size() - getDeadVillagerCount())));
+        raid.getBossBar().setName(Text.translatable("raid.wave.kill.remainingVillagers", (villagers.size() - getDeadVillagerCount())));
         raid.getBossBar().setPercent(1f - (float) getDeadVillagerCount() / villagers.size());
     }
 }

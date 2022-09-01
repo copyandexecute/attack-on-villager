@@ -155,7 +155,7 @@ public final class RaidManager implements EntityDeathEvent, ServerTickEvents.Sta
             RideableRavagerEntity ravagerEntity = ModEntities.RIDEABLE_RAVAGER.create(player.getWorld());
             ravagerEntity.setPosition(player.getPos());
             player.getWorld().spawnEntity(ravagerEntity);
-            player.sendMessage(Text.of("Du hast einen Ravager bekommen!"));
+            player.sendMessage(Text.translatable("advancement.raid_captain.ravagerSpawned"));
         }
     }
 

@@ -83,7 +83,7 @@ public class RobVillagersWave extends AbstractWave {
                 player.openHandledScreen(new NamedScreenHandlerFactory() {
                     @Override
                     public Text getDisplayName() {
-                        return Text.of("Villager Inventory");
+                        return Text.translatable("raid.wave.rob.villagerInventory");
                     }
 
                     @Override
@@ -99,7 +99,7 @@ public class RobVillagersWave extends AbstractWave {
 
     @Override
     public void updateBossBar() {
-        raid.getBossBar().setName(Text.of("Raid - Rob Villagers: " + (villagersToRob - robbed.size())));
+        raid.getBossBar().setName(Text.translatable("raid.wave.rob.remainingVillagers", (villagersToRob - robbed.size())));
         raid.getBossBar().setPercent(1f - (float) robbed.size() / villagersToRob);
     }
 }

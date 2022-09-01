@@ -1,0 +1,13 @@
+{
+  "effect.attackonvillager.villain_of_the_village_effect": "Bösewicht des Dorfes",
+  "raid.wave.destroy.remainingBlocks": "Überfall: Blöcke zerstören - %s Blöcke verbleibend",
+  "raid.wave.kill.remainingVillagers": "Überfall: Dorfbewohner töten - %s Dorfbewohner verbleibend",
+  "raid.wave.rob.remainingVillagers": "Überfall: Dorfbewohner ausrauben - %s Dorfbewohner verbleibend",
+  "raid.wave.rob.villagerInventory": "Dorfbewohner Inventar",
+  "raid.wave.win.victory": "Überfall: Sieg!",
+  "advancement.raid_captain.ravagerSpawned": "Ein wilder Verwüster ist erschienen!",
+  "advancement.raid_captain.title": "Überfall Kapitän",
+  "advancement.raid_captain.description": "Werde der Kapitän eines Raids und trage einen ominösen Banner!",
+  "advancement.villain_of_the_village.title": "Bösewicht des Dorfes",
+  "advancement.villain_of_the_village.description": "Überfalle ein Dorf"
+}

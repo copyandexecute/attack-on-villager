@@ -84,7 +84,7 @@ public class WinWave extends AbstractWave {
 
     @Override
     public void updateBossBar() {
-        raid.getBossBar().setName(Text.of("Victory!"));
+        raid.getBossBar().setName(Text.translatable("raid.wave.win.victory"));
         raid.getBossBar().setPercent(1f);
     }
 }
