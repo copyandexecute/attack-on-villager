@@ -3,8 +3,12 @@
     "icon": {
       "item": "minecraft:stone_sword"
     },
-    "title": "Raid Captain",
-    "description": "Become the captain of a raid by wearing a omnious banner!",
+    "title": {
+      "translate": "advancement.raid_captain.title"
+    },
+    "description": {
+      "translate": "advancement.raid_captain.description"
+    },
     "frame": "task",
     "show_toast": true,
     "announce_to_chat": true,
