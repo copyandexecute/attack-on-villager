@@ -45,7 +45,7 @@ public class RobVillagersWave extends AbstractWave {
     public void initDefenseMethods() {
         this.defenseMethods
                 .add(15, DefenseMethod.IRON_GOLEM_RIDING)
-                .add(30, DefenseMethod.PANICK)
+                .add(30, DefenseMethod.PANIC)
                 .add(55, DefenseMethod.ATTACK);
     }
 

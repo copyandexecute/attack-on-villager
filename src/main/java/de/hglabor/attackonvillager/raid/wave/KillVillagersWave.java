@@ -32,7 +32,7 @@ public class KillVillagersWave extends AbstractWave {
     public void initDefenseMethods() {
         this.defenseMethods
                 .add(10, DefenseMethod.IRON_GOLEM_RIDING)
-                .add(30, DefenseMethod.PANICK)
+                .add(30, DefenseMethod.PANIC)
                 .add(60, DefenseMethod.ATTACK);
     }
 
