@@ -3,6 +3,7 @@ package de.hglabor.attackonvillager.raid.defense;
 import de.hglabor.attackonvillager.entity.villager.AttackedVillager;
 import de.hglabor.attackonvillager.entity.villager.goals.VillagerBowAttackGoal;
 import de.hglabor.attackonvillager.entity.villager.goals.VillagerMeleeAttackGoal;
+import de.hglabor.attackonvillager.entity.villager.goals.VillagerPotionAttackGoal;
 import de.hglabor.attackonvillager.mixin.world.entity.MobEntityAccessor;
 import de.hglabor.attackonvillager.raid.Raid;
 import de.hglabor.attackonvillager.utils.VillagerUtils;
@@ -29,7 +30,7 @@ public enum DefenseMethod {
         villager.startRiding(ironGolemEntity);
     }),
 
-    PANICK((raid, villager) -> {
+    PANIC((raid, villager) -> {
         ((MobEntityAccessor) villager).getGoalSelector().add(3, new MoveThroughVillageGoal(villager, 1.5, false, 8, () -> true));
     }),
 
@@ -52,10 +53,13 @@ public enum DefenseMethod {
         VillagerProfession profession = villager.getVillagerData().getProfession();
         if (VillagerProfession.FLETCHER.equals(profession)) {
             ((AttackedVillager) villager).setWeapon(Items.BOW.getDefaultStack());
-            ((MobEntityAccessor) villager).getGoalSelector().add(0, new VillagerBowAttackGoal<>(villager, 1.0, 20, 15.0f));
+            ((MobEntityAccessor) villager).getGoalSelector().add(0, new VillagerBowAttackGoal<>(villager, 0.6, 20, 15.0f));
+        } else if (VillagerProfession.CLERIC.equals(profession)) {
+            ((AttackedVillager) villager).setWeapon(Items.SPLASH_POTION.getDefaultStack());
+            ((MobEntityAccessor) villager).getGoalSelector().add(0, new VillagerPotionAttackGoal<>(villager, 0.4, 20, 5.0f));
         } else {
             ((AttackedVillager) villager).setWeapon(Items.DIAMOND_SWORD.getDefaultStack());
-            ((MobEntityAccessor) villager).getGoalSelector().add(0, new VillagerMeleeAttackGoal(villager, 1.0, false));
+            ((MobEntityAccessor) villager).getGoalSelector().add(0, new VillagerMeleeAttackGoal(villager, 0.6, false));
         }
         ((MobEntityAccessor) villager).getTargetSelector().add(0, new ActiveTargetGoal<>(villager, PlayerEntity.class, false));
         ((MobEntityAccessor) villager).getTargetSelector().add(1, new ActiveTargetGoal<>(villager, RaiderEntity.class, false));

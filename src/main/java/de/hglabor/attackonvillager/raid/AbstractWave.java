@@ -1,10 +1,8 @@
 package de.hglabor.attackonvillager.raid;
 
-import de.hglabor.attackonvillager.entity.pillager.ModifiedPillagerEntity;
 import de.hglabor.attackonvillager.raid.defense.DefenseMethod;
 import de.hglabor.attackonvillager.utils.RandomCollection;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.effect.StatusEffectInstance;
@@ -12,6 +10,7 @@ import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.passive.VillagerEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.raid.RaiderEntity;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
@@ -19,7 +18,6 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
 
 import java.util.HashSet;
 import java.util.Random;
@@ -32,16 +30,17 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 
 public abstract class AbstractWave {
-    protected final Raid raid;
-    protected final Random random = new Random();
+    protected transient Raid raid;
+    protected transient final Random random = new Random();
+    protected transient final RandomCollection<DefenseMethod> defenseMethods = new RandomCollection<>();
+    protected transient final RandomCollection<Supplier<RaiderEntity>> raiders = new RandomCollection<>();
+    protected transient final WaveType type;
     protected final Set<UUID> villagers = new HashSet<>();
 
-    protected AbstractWave(Raid raid) {
+    public AbstractWave(Raid raid, WaveType type) {
         this.raid = raid;
+        this.type = type;
     }
-
-    protected final RandomCollection<DefenseMethod> defenseMethods = new RandomCollection<>();
-    protected final RandomCollection<Supplier<RaiderEntity>> raiders = new RandomCollection<>();
 
     protected final void startNextWave() {
         raid.getBossBar().setPercent(1f);

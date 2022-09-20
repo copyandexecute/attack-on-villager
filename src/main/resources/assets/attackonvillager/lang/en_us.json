@@ -1,3 +1,13 @@
 {
-  "effect.attackonvillager.villain_of_the_village_effect": "Villain of The Village"
+  "effect.attackonvillager.villain_of_the_village_effect": "Villain of The Village",
+  "raid.wave.destroy.remainingBlocks": "Raid: Destroy blocks - %s blocks remaining",
+  "raid.wave.kill.remainingVillagers": "Raid: Kill villagers - %s villagers remaining",
+  "raid.wave.rob.remainingVillagers": "Raid: Rob villagers - %s villagers remaining",
+  "raid.wave.rob.villagerInventory": "Villager Inventory",
+  "raid.wave.win.victory": "Raid: Victory!",
+  "advancement.raid_captain.ravagerSpawned": "A wild ravager appeared! You can ride and control him",
+  "advancement.raid_captain.title": "Raid Captain",
+  "advancement.raid_captain.description": "Become the captain of a raid by wearing a omnious banner!",
+  "advancement.villain_of_the_village.title": "Villain of the Village",
+  "advancement.villain_of_the_village.description": "Raid a village"
 }

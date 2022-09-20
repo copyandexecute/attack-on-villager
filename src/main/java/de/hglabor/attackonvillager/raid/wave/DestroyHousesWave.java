@@ -23,7 +23,7 @@ public class DestroyHousesWave extends AbstractWave {
     private final int blocksToDestroy = ((new Random().nextInt(5, 40) * villageBlocks.size()) / 100);
 
     public DestroyHousesWave(Raid raid) {
-        super(raid);
+        super(raid, WaveType.DESTROY_HOUSES);
     }
 
     @Override
@@ -84,7 +84,7 @@ public class DestroyHousesWave extends AbstractWave {
 
     @Override
     public void updateBossBar() {
-        raid.getBossBar().setName(Text.of("Überfall - Blöcke übrig: " + (blocksToDestroy - getDestroyedBlocks().size())));
+        raid.getBossBar().setName(Text.translatable("raid.wave.destroy.remainingBlocks", (blocksToDestroy - getDestroyedBlocks().size())));
         raid.getBossBar().setPercent(1f - (float) getDestroyedBlocks().size() / blocksToDestroy);
     }
 }

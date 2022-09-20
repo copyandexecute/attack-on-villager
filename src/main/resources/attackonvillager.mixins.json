@@ -7,6 +7,8 @@
     "advancement.PlayerAdvancementTrackerMixin",
     "item.GoatHornItemMixin",
     "server.network.MixinServerPlayNetworkHandler",
+    "world.PersistentStateManagerAccessor",
+    "world.PersistentStateManagerMixin",
     "world.entity.EntityAccessor",
     "world.entity.LivingEntityAccessor",
     "world.entity.LivingEntityMixin",

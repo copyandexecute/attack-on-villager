@@ -13,13 +13,17 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.passive.VillagerEntity;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
+import net.minecraft.nbt.NbtHelper;
+import net.minecraft.nbt.NbtList;
 import net.minecraft.text.Text;
 
 import java.util.UUID;
 
 public class KillVillagersWave extends AbstractWave {
     public KillVillagersWave(Raid raid) {
-        super(raid);
+        super(raid, WaveType.KILL_VILLAGERS);
     }
 
     @Override
@@ -32,7 +36,7 @@ public class KillVillagersWave extends AbstractWave {
     public void initDefenseMethods() {
         this.defenseMethods
                 .add(10, DefenseMethod.IRON_GOLEM_RIDING)
-                .add(30, DefenseMethod.PANICK)
+                .add(30, DefenseMethod.PANIC)
                 .add(60, DefenseMethod.ATTACK);
     }
 
@@ -95,7 +99,7 @@ public class KillVillagersWave extends AbstractWave {
 
     @Override
     public void updateBossBar() {
-        raid.getBossBar().setName(Text.of("Raid - Villagers übrig: " + (villagers.size() - getDeadVillagerCount())));
+        raid.getBossBar().setName(Text.translatable("raid.wave.kill.remainingVillagers", (villagers.size() - getDeadVillagerCount())));
         raid.getBossBar().setPercent(1f - (float) getDeadVillagerCount() / villagers.size());
     }
 }

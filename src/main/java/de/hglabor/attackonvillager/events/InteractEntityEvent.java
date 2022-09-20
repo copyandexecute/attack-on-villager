@@ -8,8 +8,7 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.world.World;
-
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 public interface InteractEntityEvent {
     Event<InteractEntityEvent> EVENT = EventFactory.createArrayBacked(InteractEntityEvent.class,

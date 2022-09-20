@@ -14,4 +14,6 @@ public interface AttackedVillager {
     void playAttackSound();
 
     void shoot(LivingEntity enemy, float progress);
+
+    void throwPotion(LivingEntity enemy);
 }

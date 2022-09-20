@@ -14,6 +14,10 @@ import net.minecraft.entity.InventoryOwner;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
+import net.minecraft.nbt.NbtHelper;
+import net.minecraft.nbt.NbtList;
 import net.minecraft.screen.GenericContainerScreenHandler;
 import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.screen.ScreenHandler;
@@ -30,7 +34,7 @@ public class RobVillagersWave extends AbstractWave {
     private int villagersToRob;
 
     public RobVillagersWave(Raid raid) {
-        super(raid);
+        super(raid, WaveType.ROB_VILLAGERS);
     }
 
     @Override
@@ -45,7 +49,7 @@ public class RobVillagersWave extends AbstractWave {
     public void initDefenseMethods() {
         this.defenseMethods
                 .add(15, DefenseMethod.IRON_GOLEM_RIDING)
-                .add(30, DefenseMethod.PANICK)
+                .add(30, DefenseMethod.PANIC)
                 .add(55, DefenseMethod.ATTACK);
     }
 
@@ -83,7 +87,7 @@ public class RobVillagersWave extends AbstractWave {
                 player.openHandledScreen(new NamedScreenHandlerFactory() {
                     @Override
                     public Text getDisplayName() {
-                        return Text.of("Villager Inventory");
+                        return Text.translatable("raid.wave.rob.villagerInventory");
                     }
 
                     @Override
@@ -99,7 +103,7 @@ public class RobVillagersWave extends AbstractWave {
 
     @Override
     public void updateBossBar() {
-        raid.getBossBar().setName(Text.of("Raid - Rob Villagers: " + (villagersToRob - robbed.size())));
+        raid.getBossBar().setName(Text.translatable("raid.wave.rob.remainingVillagers", (villagersToRob - robbed.size())));
         raid.getBossBar().setPercent(1f - (float) robbed.size() / villagersToRob);
     }
 }

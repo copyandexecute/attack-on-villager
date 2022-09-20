@@ -6,22 +6,18 @@ import de.hglabor.attackonvillager.raid.Raid;
 import de.hglabor.attackonvillager.raid.WaveType;
 import de.hglabor.attackonvillager.raid.defense.DefenseMethod;
 import de.hglabor.attackonvillager.utils.VillagerUtils;
-import net.minecraft.entity.ItemEntity;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 
-import java.util.Stack;
 import java.util.concurrent.TimeUnit;
 
 public class WinWave extends AbstractWave {
-    protected WinWave(Raid raid) {
-        super(raid);
+    public WinWave(Raid raid) {
+        super(raid, WaveType.WIN);
     }
 
     @Override
@@ -35,7 +31,12 @@ public class WinWave extends AbstractWave {
     }
 
     private void itemRain() {
-        runTaskTimer(new Task() {
+        BlockPos pos = raid.getCenter().withY(VillagerUtils.getHighestY(raid.getWorld(), raid.getCenter().getX(), raid.getCenter().getZ()));
+        raid.getWorld().setBlockState(pos, Blocks.CHEST.getDefaultState());
+        BlockState blockState = raid.getWorld().getBlockState(pos);
+        //TODO chest befüllen machen
+
+       /* runTaskTimer(new Task() {
             //private final BlockPos pos = raid.getCenter().withY(VillagerUtils.getHighestY(raid.getWorld(), raid.getCenter().getX(), raid.getCenter().getZ()));
             private final BlockPos pos = raid.getLeader().get().getBlockPos();
             private final Stack<ItemStack> loot = VillagerUtils.toStack(raid.getWinLoot());
@@ -60,7 +61,7 @@ public class WinWave extends AbstractWave {
                     angle = 0;
                 }
             }
-        }, 200, TimeUnit.MILLISECONDS);
+        }, 200, TimeUnit.MILLISECONDS); */
     }
 
     @Override
@@ -84,7 +85,7 @@ public class WinWave extends AbstractWave {
 
     @Override
     public void updateBossBar() {
-        raid.getBossBar().setName(Text.of("Victory!"));
+        raid.getBossBar().setName(Text.translatable("raid.wave.win.victory"));
         raid.getBossBar().setPercent(1f);
     }
 }
