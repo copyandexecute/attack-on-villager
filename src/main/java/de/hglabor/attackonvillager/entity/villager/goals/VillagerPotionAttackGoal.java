@@ -4,7 +4,6 @@ import de.hglabor.attackonvillager.entity.villager.AttackedVillager;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.passive.VillagerEntity;
-import net.minecraft.item.BowItem;
 
 import java.util.EnumSet;
 
