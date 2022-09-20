@@ -23,7 +23,7 @@ public class DestroyHousesWave extends AbstractWave {
     private final int blocksToDestroy = ((new Random().nextInt(5, 40) * villageBlocks.size()) / 100);
 
     public DestroyHousesWave(Raid raid) {
-        super(raid);
+        super(raid, WaveType.DESTROY_HOUSES);
     }
 
     @Override

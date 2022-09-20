@@ -9,7 +9,6 @@ import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
 
 public class CanonEntityRenderer extends EntityRenderer<CanonEntity> {
     private static final Identifier TEXTURE = new Identifier("textures/entity/illager/ravager.png");

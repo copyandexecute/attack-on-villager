@@ -13,13 +13,17 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.passive.VillagerEntity;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
+import net.minecraft.nbt.NbtHelper;
+import net.minecraft.nbt.NbtList;
 import net.minecraft.text.Text;
 
 import java.util.UUID;
 
 public class KillVillagersWave extends AbstractWave {
     public KillVillagersWave(Raid raid) {
-        super(raid);
+        super(raid, WaveType.KILL_VILLAGERS);
     }
 
     @Override

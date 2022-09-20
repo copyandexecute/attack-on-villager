@@ -14,6 +14,10 @@ import net.minecraft.entity.InventoryOwner;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
+import net.minecraft.nbt.NbtHelper;
+import net.minecraft.nbt.NbtList;
 import net.minecraft.screen.GenericContainerScreenHandler;
 import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.screen.ScreenHandler;
@@ -30,7 +34,7 @@ public class RobVillagersWave extends AbstractWave {
     private int villagersToRob;
 
     public RobVillagersWave(Raid raid) {
-        super(raid);
+        super(raid, WaveType.ROB_VILLAGERS);
     }
 
     @Override

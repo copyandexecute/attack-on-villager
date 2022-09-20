@@ -22,18 +22,14 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Random;
-import java.util.Set;
-import java.util.UUID;
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static de.hglabor.attackonvillager.AttackOnVillagerClient.MOD_ID;
@@ -41,47 +37,59 @@ import static de.hglabor.attackonvillager.AttackOnVillagerClient.MOD_ID;
 public class Raid {
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
     private static final double SEARCH_RADIUS = 100;
-    private final UUID leader;
-    private final ChunkPos chunkPos;
-    private final BlockPos center;
-    private final Set<BlockPos> blocks;
     private final ServerWorld world;
     private final ServerBossBar bossBar = new ServerBossBar(Text.empty(), BossBar.Color.RED, BossBar.Style.PROGRESS);
     private final Random random = new Random();
-    private AbstractWave currentWave;
-    private boolean isActive;
-    private boolean isWon;
     private final Set<UUID> participants = new HashSet<>();
     private final List<ItemStack> winLoot = new ArrayList<>();
+    private final Config config;
+
+    public static class Config {
+        public UUID leader;
+        public ChunkPos chunkPos;
+        public BlockPos center;
+        public Set<BlockPos> blocks;
+        public boolean isActive;
+        public boolean isWon;
+        public AbstractWave currentWave;
+    }
+
+    public Raid(ServerWorld world, Config config) {
+        this.config = config;
+        this.config.currentWave.raid = this;
+        this.world = world;
+    }
 
     public Raid(ServerWorld world, UUID leader, ChunkPos chunkPos, BlockPos center, Set<BlockPos> blocks) {
-        this.leader = leader;
-        this.chunkPos = chunkPos;
-        this.center = center;
-        this.blocks = blocks;
+        this.config = new Config();
+        this.config.leader = leader;
+        this.config.chunkPos = chunkPos;
+        this.config.center = center;
+        this.config.blocks = blocks;
+        this.config.currentWave = random.nextBoolean() ? new RobVillagersWave(this) : new KillVillagersWave(this);
         this.world = world;
         this.participants.add(leader);
-        this.currentWave = random.nextBoolean() ? new RobVillagersWave(this) : new KillVillagersWave(this);
     }
 
     public void start() {
-        isActive = true;
-        strikeLightning(center, true);
+        this.config.isActive = true;
+        strikeLightning(this.config.center, true);
         generateVillagerLoot();
-        currentWave.start();
+        this.config.currentWave.start();
     }
 
     public void tick() {
-        if (isActive) {
-            currentWave.tick();
+        if (this.config.isActive) {
+            this.config.currentWave.tick();
             trackBossBar();
         }
     }
 
     public void end() {
-        isActive = false;
+        this.config.isActive = false;
         bossBar.clearPlayers();
-        isWon = true;
+        this.config.isWon = true;
+        save();
         //RaidManager.INSTANCE.removeRaid(chunkPos);
     }
 
@@ -102,7 +110,7 @@ public class Raid {
     }
 
     public Optional<PlayerEntity> getLeader() {
-      return Optional.ofNullable(world.getPlayerByUuid(leader));
+        return Optional.ofNullable(world.getPlayerByUuid(this.config.leader));
     }
 
     public List<PlayerEntity> getOnlineParticipants() {
@@ -132,7 +140,7 @@ public class Raid {
 
     public void trackBossBar() {
         for (ServerPlayerEntity player : world.getPlayers()) {
-            if (player.getPos().distanceTo(Vec3d.of(center)) <= 100) {
+            if (player.getPos().distanceTo(Vec3d.of(this.config.center)) <= 100) {
                 bossBar.addPlayer(player);
             } else {
                 bossBar.removePlayer(player);
@@ -141,43 +149,43 @@ public class Raid {
     }
 
     public void onInteractEntity(PlayerEntity player, LivingEntity entity) {
-        currentWave.onInteractEntity(player, entity);
+        this.config.currentWave.onInteractEntity(player, entity);
     }
 
     public void onEntityDeath(LivingEntity entity) {
-        currentWave.onEntityDeath(entity);
+        this.config.currentWave.onEntityDeath(entity);
     }
 
     public void onBlockBreak(BlockPos pos, PlayerEntity player) {
-        currentWave.onBlockBreak(pos, player);
+        this.config.currentWave.onBlockBreak(pos, player);
     }
 
     public void onGoatHorn(ServerWorld world, PlayerEntity user, Hand hand) {
-        currentWave.onGoatHorn( world,  user,  hand);
+        this.config.currentWave.onGoatHorn(world, user, hand);
     }
 
     public AbstractWave getCurrentWave() {
-        return currentWave;
+        return this.config.currentWave;
     }
 
     protected void setCurrentWave(AbstractWave currentWave) {
-        this.currentWave = currentWave;
+        this.config.currentWave = currentWave;
     }
 
     public UUID getLeaderUUID() {
-        return leader;
+        return this.config.leader;
     }
 
     public ChunkPos getChunkPos() {
-        return chunkPos;
+        return this.config.chunkPos;
     }
 
     public BlockPos getCenter() {
-        return center;
+        return this.config.center;
     }
 
     public Set<BlockPos> getBlocks() {
-        return blocks;
+        return this.config.blocks;
     }
 
     public ServerWorld getWorld() {
@@ -193,6 +201,29 @@ public class Raid {
     }
 
     public boolean isWon() {
-        return isWon;
+        return this.config.isWon;
+    }
+
+    public void setActive(boolean active) {
+        this.config.isActive = active;
+    }
+
+    public boolean isActive() {
+        return this.config.isActive;
+    }
+
+    public void setWon(boolean won) {
+        this.config.isWon = won;
+    }
+
+    public void save() {
+        LOGGER.info("Trying to save raid " + this.config.chunkPos);
+        String json = RaidManager.GSON.toJson(config);
+        try {
+            Files.writeString(new File(RaidManager.INSTANCE.getRaidDirectory() + "/" + RaidManager.INSTANCE.chunkPosToString(this.config.chunkPos) + ".json").toPath(), json, StandardCharsets.UTF_8);
+            LOGGER.info("Successfully saved raid " + this.config.chunkPos);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
