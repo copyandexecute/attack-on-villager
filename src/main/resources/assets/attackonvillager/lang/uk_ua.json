@@ -1,0 +1,13 @@
+{
+  "effect.attackonvillager.villain_of_the_village_effect": "Лиходій села",
+  "raid.wave.destroy.remainingBlocks": "Набіг: Знищення блоків — %s блоків залишилося",
+  "raid.wave.kill.remainingVillagers": "Набіг: Убивство селян — %s селян залишилося",
+  "raid.wave.rob.remainingVillagers": "Набіг: Грабування селян — %s селян залишилося",
+  "raid.wave.rob.villagerInventory": "Інвентар селянина",
+  "raid.wave.win.victory": "Набіг: Перемога!",
+  "advancement.raid_captain.ravagerSpawned": "З'явився дикий руйнівник! Ви можете кататися і керувати ним",
+  "advancement.raid_captain.title": "Капітан набігу",
+  "advancement.raid_captain.description": "Станьте капітаном набігу надягнувши зловісний стяг!",
+  "advancement.villain_of_the_village.title": "Лиходій села",
+  "advancement.villain_of_the_village.description": "Здійснить набіг на село"
+}
